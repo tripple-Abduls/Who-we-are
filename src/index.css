@@ -258,6 +258,14 @@
   background-size: 200px 200px;
 }
 
+/* Mobile performance — drop the full-viewport mix-blend overlay (compositing
+   cost) on small screens. */
+@media (max-width: 768px) {
+  .grain {
+    display: none;
+  }
+}
+
 /* =========================================================================
    Reduced motion — respect the OS setting globally
    ========================================================================= */

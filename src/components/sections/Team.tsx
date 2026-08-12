@@ -23,7 +23,11 @@ export function Team() {
         duration: DUR.reveal,
         ease: EASE.out,
         stagger: STAGGER.loose,
-        scrollTrigger: { trigger: "[data-team-grid]", start: REVEAL_START },
+        scrollTrigger: {
+          trigger: "[data-team-grid]",
+          start: REVEAL_START,
+          once: true,
+        },
       });
     },
     { scope: ref, dependencies: [reduced] },

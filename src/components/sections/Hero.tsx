@@ -61,11 +61,15 @@ export function Hero() {
         )
         .to("[data-hero-cue]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, "-=0.4");
 
-      gsap.fromTo(
-        "[data-scroll-seg]",
-        { y: 0 },
-        { y: 22, duration: 1.5, ease: "power1.inOut", repeat: -1, yoyo: true },
-      );
+      // Continuous loop is desktop-only — never runs (or lingers off-screen)
+      // on mobile. gsap.matchMedia reverts it automatically below 769px.
+      gsap.matchMedia(ref).add("(min-width: 769px)", () => {
+        gsap.fromTo(
+          "[data-scroll-seg]",
+          { y: 0 },
+          { y: 22, duration: 1.5, ease: "power1.inOut", repeat: -1, yoyo: true },
+        );
+      });
     },
     { scope: ref, dependencies: [reduced] },
   );

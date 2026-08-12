@@ -46,6 +46,8 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
           data-work-media
           src={project.image}
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
         />
       ) : shape.feature ? (

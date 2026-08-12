@@ -37,7 +37,7 @@ export function SectionLabel({
         duration: 0.5,
         ease: EASE.outExpo,
         stagger: 0.08,
-        scrollTrigger: { trigger: ref.current, start: "top 92%" },
+        scrollTrigger: { trigger: ref.current, start: "top 92%", once: true },
       });
     },
     { scope: ref, dependencies: [reduced] },

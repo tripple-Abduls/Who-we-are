@@ -3,8 +3,7 @@ import { SectionLabel } from "../ui/SectionLabel";
 import { RevealHeading } from "../ui/RevealHeading";
 import { processSteps } from "../../data/process";
 import { gsap, ScrollTrigger, useGSAP } from "../../lib/gsap";
-import { EASE } from "../../lib/motion";
-import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { DUR, EASE } from "../../lib/motion";
 
 const BONE = "#f4f2ed";
 const MUTE = "#8f8b81";
@@ -12,90 +11,106 @@ const IDLE = "#6b6760";
 const GOLD = "#c6a15b";
 const LINE = "rgba(244,242,237,0.14)";
 
+const DESKTOP = "(min-width: 769px) and (prefers-reduced-motion: no-preference)";
+const MOBILE = "(max-width: 768px) and (prefers-reduced-motion: no-preference)";
+
 /**
- * Scroll-driven process. A sticky left rail (CSS sticky — no pin jank) shows
- * the active stage number, a progress fill and a labelled index; the right
- * column scrolls through the five stages, each brightening as it reaches the
- * centre. ScrollTrigger only reads scroll position — it never owns layout — so
- * with reduced motion the section is a fully readable, static list.
+ * Process, split by gsap.matchMedia:
+ * - Desktop: a sticky left rail (CSS sticky, no pin) with an active stage
+ *   number, a scrubbed gold progress fill and a labelled index; the right
+ *   column's stages brighten as they reach the centre.
+ * - Mobile: performance-first — no scrub, no active toggling, no continuous
+ *   work. Each stage simply reveals once as it enters the viewport.
+ * - Reduced motion: a fully readable, static list.
+ * matchMedia reverts each context automatically when the breakpoint changes.
  */
 export function Process() {
   const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
 
   useGSAP(
     () => {
       if (!ref.current) return;
-      const nums = gsap.utils.toArray<HTMLElement>("[data-proc-num]");
-      const labels = gsap.utils.toArray<HTMLElement>("[data-proc-label]");
-      const lines = gsap.utils.toArray<HTMLElement>("[data-proc-line]");
-      const titles = gsap.utils.toArray<HTMLElement>("[data-proc-title]");
+      const q = <T extends HTMLElement>(sel: string) =>
+        gsap.utils.toArray<T>(sel, ref.current);
+      const mm = gsap.matchMedia(ref);
 
-      if (reduced) {
-        nums.forEach((n, i) => gsap.set(n, { autoAlpha: i === 0 ? 1 : 0 }));
-        titles.forEach((t) => gsap.set(t, { color: BONE }));
-        gsap.set("[data-proc-fill]", { scaleX: 1 });
-        return;
-      }
+      mm.add(DESKTOP, () => {
+        const nums = q("[data-proc-num]");
+        const labels = q("[data-proc-label]");
+        const lines = q("[data-proc-line]");
+        const titles = q("[data-proc-title]");
 
-      const setActive = (idx: number) => {
-        nums.forEach((n, i) =>
-          gsap.to(n, { autoAlpha: i === idx ? 1 : 0, duration: 0.4, ease: EASE.out }),
+        const setActive = (idx: number) => {
+          nums.forEach((n, i) =>
+            gsap.to(n, { autoAlpha: i === idx ? 1 : 0, duration: 0.4, ease: EASE.out }),
+          );
+          labels.forEach((l, i) =>
+            gsap.to(l, { color: i === idx ? BONE : MUTE, duration: 0.35, ease: EASE.out }),
+          );
+          lines.forEach((l, i) =>
+            gsap.to(l, {
+              width: i === idx ? 40 : 20,
+              backgroundColor: i === idx ? GOLD : LINE,
+              duration: 0.35,
+              ease: EASE.out,
+            }),
+          );
+          titles.forEach((t, i) =>
+            gsap.to(t, { color: i === idx ? BONE : IDLE, duration: 0.4, ease: EASE.out }),
+          );
+        };
+
+        gsap.set(titles, { color: IDLE });
+        q("[data-proc-step]").forEach((step, i) => {
+          ScrollTrigger.create({
+            trigger: step,
+            start: "top center",
+            end: "bottom center",
+            onToggle: (self) => self.isActive && setActive(i),
+          });
+        });
+        gsap.fromTo(
+          "[data-proc-fill]",
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "[data-proc-track]",
+              start: "top center",
+              end: "bottom center",
+              scrub: 0.4,
+            },
+          },
         );
-        labels.forEach((l, i) =>
-          gsap.to(l, {
-            color: i === idx ? BONE : MUTE,
-            duration: 0.35,
+        setActive(0);
+      });
+
+      mm.add(MOBILE, () => {
+        // Lightweight: one-time reveal per stage, titles fully legible, no scrub.
+        q("[data-proc-title]").forEach((t) => gsap.set(t, { color: BONE }));
+        q("[data-proc-step]").forEach((step) => {
+          gsap.from(step, {
+            autoAlpha: 0,
+            y: 22,
+            duration: DUR.reveal,
             ease: EASE.out,
-          }),
-        );
-        lines.forEach((l, i) =>
-          gsap.to(l, {
-            width: i === idx ? 40 : 20,
-            backgroundColor: i === idx ? GOLD : LINE,
-            duration: 0.35,
-            ease: EASE.out,
-          }),
-        );
-        titles.forEach((t, i) =>
-          gsap.to(t, {
-            color: i === idx ? BONE : IDLE,
-            duration: 0.4,
-            ease: EASE.out,
-          }),
-        );
-      };
-
-      gsap.set(titles, { color: IDLE });
-
-      const steps = gsap.utils.toArray<HTMLElement>("[data-proc-step]");
-      steps.forEach((step, i) => {
-        ScrollTrigger.create({
-          trigger: step,
-          start: "top center",
-          end: "bottom center",
-          onToggle: (self) => self.isActive && setActive(i),
+            scrollTrigger: { trigger: step, start: "top 88%", once: true },
+          });
         });
       });
 
-      gsap.fromTo(
-        "[data-proc-fill]",
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: "[data-proc-track]",
-            start: "top center",
-            end: "bottom center",
-            scrub: 0.4,
-          },
-        },
-      );
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        q("[data-proc-num]").forEach((n, i) =>
+          gsap.set(n, { autoAlpha: i === 0 ? 1 : 0 }),
+        );
+        q("[data-proc-title]").forEach((t) => gsap.set(t, { color: BONE }));
+        gsap.set("[data-proc-fill]", { scaleX: 1 });
+      });
 
-      setActive(0);
+      return () => mm.revert();
     },
-    { scope: ref, dependencies: [reduced] },
+    { scope: ref, dependencies: [] },
   );
 
   return (

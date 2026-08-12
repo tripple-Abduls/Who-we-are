@@ -57,7 +57,7 @@ export function Header() {
         className={cn(
           "fixed inset-x-0 top-0 z-[70] border-b transition-[background-color,border-color,padding] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
           scrolled
-            ? "border-line bg-ink/80 py-3.5 backdrop-blur-md"
+            ? "border-line bg-ink py-3.5 md:bg-ink/80 md:backdrop-blur-md"
             : "border-transparent py-6",
         )}
       >

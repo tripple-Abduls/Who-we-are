@@ -24,7 +24,11 @@ export function Services() {
         duration: DUR.reveal,
         ease: EASE.out,
         stagger: STAGGER.base,
-        scrollTrigger: { trigger: "[data-service-list]", start: REVEAL_START },
+        scrollTrigger: {
+          trigger: "[data-service-list]",
+          start: REVEAL_START,
+          once: true,
+        },
       });
     },
     { scope: ref, dependencies: [reduced] },

@@ -37,7 +37,7 @@ export function Reveal({
         duration: DUR.reveal,
         ease: EASE.out,
         delay,
-        scrollTrigger: { trigger: ref.current, start },
+        scrollTrigger: { trigger: ref.current, start, once: true },
       });
     },
     { scope: ref, dependencies: [reduced] },

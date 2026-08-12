@@ -8,6 +8,7 @@ import {
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "./gsap";
 import { useReducedMotion } from "../hooks/useReducedMotion";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 
 type ScrollTarget = string | number | HTMLElement;
 type ScrollToOptions = { offset?: number; immediate?: boolean };
@@ -34,15 +35,19 @@ export function useSmoothScroll() {
 
 /**
  * Drives Lenis smooth scrolling and keeps it in lockstep with GSAP's ticker
- * and ScrollTrigger. When the user prefers reduced motion, Lenis is never
- * created and `scrollTo` falls back to native, instant scrolling.
+ * and ScrollTrigger — on desktop only. On touch / small screens (<=768px) and
+ * under reduced motion, Lenis is never created: the page uses native scrolling
+ * (no continuous rAF loop) and `scrollTo` falls back to native scrolling. This
+ * is the single biggest mobile-scroll performance win.
  */
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
   const reduced = useReducedMotion();
+  const isDesktop = useMediaQuery("(min-width: 769px)");
+  const enableLenis = !reduced && isDesktop;
 
   useEffect(() => {
-    if (reduced) return;
+    if (!enableLenis) return;
 
     const lenis = new Lenis({
       duration: 0.9,
@@ -66,7 +71,7 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, [reduced]);
+  }, [enableLenis]);
 
   const scrollTo: ScrollTo = (target, options) => {
     const lenis = lenisRef.current;

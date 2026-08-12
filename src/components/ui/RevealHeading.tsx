@@ -40,14 +40,15 @@ export function RevealHeading({
       if (reduced || !ref.current) return;
       const inners =
         ref.current.querySelectorAll<HTMLElement>("[data-reveal-line]");
-      gsap.set(inners, { yPercent: 118 });
-      gsap.to(inners, {
-        yPercent: 0,
+      // gsap.from (immediateRender) reliably applies the hidden state at build
+      // and reveals on enter under both Lenis and native (mobile) scrolling.
+      gsap.from(inners, {
+        yPercent: 118,
         duration: DUR.reveal,
         ease: EASE.outExpo,
         stagger,
         delay,
-        scrollTrigger: { trigger: ref.current, start },
+        scrollTrigger: { trigger: ref.current, start, once: true },
       });
     },
     { scope: ref, dependencies: [reduced] },

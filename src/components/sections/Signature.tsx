@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { gsap, useGSAP } from "../../lib/gsap";
-import { EASE } from "../../lib/motion";
+import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { cn } from "../../lib/cn";
@@ -41,7 +41,26 @@ export function Signature() {
 
   useGSAP(
     () => {
-      if (!pinned || !ref.current) return;
+      if (!ref.current) return;
+
+      // Mobile: no pin, no scrub. A single lightweight reveal of the list.
+      if (!pinned) {
+        if (reduced) return;
+        gsap.from("[data-sig-item]", {
+          autoAlpha: 0,
+          y: 24,
+          duration: DUR.reveal,
+          ease: EASE.out,
+          stagger: 0.09,
+          scrollTrigger: {
+            trigger: "[data-sig-list]",
+            start: "top 85%",
+            once: true,
+          },
+        });
+        return;
+      }
+
       const root = ref.current;
       const phases = gsap.utils.toArray<HTMLElement>("[data-phase]", root);
       const labels = gsap.utils.toArray<HTMLElement>("[data-sig-label]", root);
@@ -85,7 +104,7 @@ export function Signature() {
         .to(phases[2], { autoAlpha: 1, yPercent: 0, duration: 0.5 }, 2)
         .to({}, { duration: 0.5 }, 2.5);
     },
-    { scope: ref, dependencies: [pinned] },
+    { scope: ref, dependencies: [pinned, reduced] },
   );
 
   // Mobile / reduced motion: a plain, readable three-part list — no pin.
@@ -94,9 +113,13 @@ export function Signature() {
       <section id="approach" className="section-y" aria-label="How we work">
         <div className="shell">
           <p className="eyebrow text-gold">Why Tripple</p>
-          <div className="mt-14 flex flex-col gap-16">
+          <div data-sig-list className="mt-14 flex flex-col gap-16">
             {PHASES.map((p) => (
-              <div key={p.index} className="border-t border-line pt-8">
+              <div
+                key={p.index}
+                data-sig-item
+                className="border-t border-line pt-8"
+              >
                 <span className="num text-[0.85rem] font-medium text-gold">
                   {p.index} / 03
                 </span>
