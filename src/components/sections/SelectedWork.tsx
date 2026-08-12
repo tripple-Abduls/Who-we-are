@@ -8,13 +8,13 @@ import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 /**
- * Editorial layout template — varied spans, aspects, offsets and folio
- * compositions. The numeral sits differently in each card (bleeding corners,
- * centre, offset) so the grid reads as art direction, not a repeated cell.
+ * Editorial layout template — landscape / portrait / full-width feature rhythm
+ * with staggered offsets and per-card folio placement. Reads as art direction,
+ * not a repeated grid of equal cells.
  */
 const SHAPES: CardShape[] = [
   {
-    col: "md:col-span-7",
+    col: "md:col-span-8",
     extra: "",
     aspect: "aspect-[4/3] md:aspect-[16/10]",
     surface: "bg-ink-soft",
@@ -22,44 +22,37 @@ const SHAPES: CardShape[] = [
     numSize: "text-[clamp(4rem,30cqi,14rem)]",
   },
   {
-    col: "md:col-span-5",
-    extra: "md:mt-24",
-    aspect: "aspect-[4/3] md:aspect-[3/4]",
-    surface: "bg-ink-raised",
-    numPlace: "items-center justify-center",
-    numSize: "text-[clamp(3.5rem,44cqi,11rem)]",
-  },
-  {
-    col: "md:col-span-5",
-    extra: "",
+    col: "md:col-span-4",
+    extra: "md:mt-28",
     aspect: "aspect-[4/3] md:aspect-[3/4]",
     surface: "bg-ink-raised",
     numPlace: "items-start justify-start",
-    numSize: "text-[clamp(3.5rem,40cqi,10rem)]",
+    numSize: "text-[clamp(3.5rem,42cqi,11rem)]",
   },
   {
-    col: "md:col-span-7",
-    extra: "md:mt-24",
+    col: "md:col-span-12",
+    extra: "",
+    aspect: "aspect-[4/3] md:aspect-[21/9]",
+    surface: "bg-ink-soft",
+    numPlace: "items-center justify-end",
+    numSize: "text-[clamp(4rem,16cqi,12rem)]",
+    feature: true,
+  },
+  {
+    col: "md:col-span-4",
+    extra: "",
+    aspect: "aspect-[4/3] md:aspect-[3/4]",
+    surface: "bg-ink-raised",
+    numPlace: "items-end justify-center",
+    numSize: "text-[clamp(3.5rem,44cqi,11rem)]",
+  },
+  {
+    col: "md:col-span-8",
+    extra: "md:mt-28",
     aspect: "aspect-[4/3] md:aspect-[16/10]",
     surface: "bg-ink-soft",
     numPlace: "items-center justify-start",
     numSize: "text-[clamp(4rem,28cqi,13rem)]",
-  },
-  {
-    col: "md:col-span-8",
-    extra: "",
-    aspect: "aspect-[4/3] md:aspect-[16/7]",
-    surface: "bg-ink-soft",
-    numPlace: "items-center justify-end",
-    numSize: "text-[clamp(3.5rem,20cqi,11rem)]",
-  },
-  {
-    col: "md:col-span-4",
-    extra: "md:mt-24",
-    aspect: "aspect-[4/3] md:aspect-[3/4]",
-    surface: "bg-ink-raised",
-    numPlace: "items-end justify-center",
-    numSize: "text-[clamp(3.5rem,46cqi,11rem)]",
   },
 ];
 

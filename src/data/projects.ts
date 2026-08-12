@@ -57,12 +57,4 @@ export const projects: Project[] = [
     year: "2026",
     description: "Project details will be added here.",
   },
-  {
-    id: "project-06",
-    index: "06",
-    title: "Project Title",
-    category: "Interactive Experience",
-    year: "2026",
-    description: "Project details will be added here.",
-  },
 ];
