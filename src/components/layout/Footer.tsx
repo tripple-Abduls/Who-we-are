@@ -2,6 +2,7 @@ import { ArrowUp } from "lucide-react";
 import { navItems } from "../../data/navigation";
 import { useSmoothScroll } from "../../lib/smooth-scroll";
 import { SCROLL_OFFSET } from "../../lib/constants";
+import { Reveal } from "../ui/Reveal";
 
 /** Channels are placeholders until real profiles exist — no invented URLs. */
 const CHANNELS = ["LinkedIn", "GitHub", "Behance", "Instagram"];
@@ -31,31 +32,20 @@ export function Footer() {
   const { scrollTo } = useSmoothScroll();
 
   return (
-    <footer id="site-footer" className="border-t border-line bg-ink-soft">
+    <footer
+      id="site-footer"
+      className="overflow-hidden border-t border-line bg-ink-soft"
+    >
       <div className="shell section-y-sm">
+        {/* Columns */}
         <div className="grid gap-x-8 gap-y-14 md:grid-cols-12">
-          {/* Brand */}
-          <div className="md:col-span-5">
-            <a
-              href="#top"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollTo(0);
-              }}
-              className="t-h2 text-bone"
-              aria-label="Triple — back to top"
-            >
-              Triple<span className="text-gold">.</span>
-            </a>
-            <p className="eyebrow mt-6 text-mute">
-              Strategy / Design / Technology
-            </p>
-            <p className="t-body mt-8 max-w-xs text-mute">
+          <div className="md:col-span-6">
+            <p className="eyebrow text-gold">Strategy / Design / Technology</p>
+            <p className="t-body mt-7 max-w-xs text-mute">
               An independent digital studio, building its first case studies.
             </p>
           </div>
 
-          {/* Navigate */}
           <nav className="md:col-span-3 md:col-start-7" aria-label="Footer">
             <p className="eyebrow text-faint">Navigate</p>
             <ul className="mt-6 flex flex-col gap-3.5">
@@ -67,7 +57,6 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Channels (placeholder) */}
           <div className="md:col-span-3">
             <p className="eyebrow text-faint">Studio</p>
             <ul className="mt-6 flex flex-col gap-3.5">
@@ -86,8 +75,27 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Giant brand signature */}
+        <Reveal className="mt-20 md:mt-28" y={30}>
+          <a
+            href="#top"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo(0);
+            }}
+            aria-label="Triple — back to top"
+            className="block whitespace-nowrap font-display leading-[0.78] text-bone"
+            style={{
+              fontSize: "clamp(5rem, 25vw, 22rem)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Triple<span className="text-gold">.</span>
+          </a>
+        </Reveal>
+
         {/* Bottom bar */}
-        <div className="mt-20 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[0.9rem] text-mute">
             Built by Triple<span className="text-gold">.</span>
           </p>
