@@ -70,10 +70,10 @@ export function Header() {
               e.preventDefault();
               go("#top");
             }}
-            aria-label="Triple — back to top"
+            aria-label="Tripple — back to top"
             className="text-[0.98rem] font-medium uppercase tracking-[0.28em] text-bone transition-colors duration-[240ms] hover:text-gold"
           >
-            Triple<span className="text-gold">.</span>
+            Tripple<span className="text-gold">.</span>
           </a>
 
           {/* Desktop navigation */}

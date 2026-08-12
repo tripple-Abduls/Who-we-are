@@ -27,7 +27,7 @@ const WORD_SIZE = "clamp(3.4rem, 13.5vw, 12.5rem)";
 const GHOST_SIZE = "clamp(8rem, 34vw, 30rem)";
 
 /**
- * The Triple signature moment. On desktop the section pins and the reader
+ * The Tripple signature moment. On desktop the section pins and the reader
  * scrubs through Think → Create → Build: the word and giant ghost numeral
  * crossfade, a gold line fills, and the active label lights. Under reduced
  * motion it collapses to a plain, readable three-part list — no pin, no scrub.
@@ -93,7 +93,7 @@ export function Signature() {
     return (
       <section id="approach" className="section-y" aria-label="How we work">
         <div className="shell">
-          <p className="eyebrow text-gold">Why Triple</p>
+          <p className="eyebrow text-gold">Why Tripple</p>
           <div className="mt-14 flex flex-col gap-16">
             {PHASES.map((p) => (
               <div key={p.index} className="border-t border-line pt-8">
@@ -121,7 +121,7 @@ export function Signature() {
         <div className="shell flex h-full flex-col justify-center pt-24">
           {/* Top row */}
           <div className="flex items-center justify-between border-t border-line pt-5">
-            <p className="eyebrow text-gold">Why Triple</p>
+            <p className="eyebrow text-gold">Why Tripple</p>
             <p data-sig-counter className="eyebrow num text-mute">
               01 / 03
             </p>

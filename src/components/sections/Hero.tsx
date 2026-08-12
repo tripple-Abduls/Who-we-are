@@ -107,11 +107,11 @@ export function Hero() {
           </h1>
         </div>
 
-        {/* Bottom composition: copy + CTAs (left) · Triple stages (right) */}
+        {/* Bottom composition: copy + CTAs (left) · Tripple stages (right) */}
         <div className="mt-12 grid gap-10 border-t border-line pt-7 md:grid-cols-12 md:items-end">
           <div className="md:col-span-7">
             <p data-hero-copy className="t-lead max-w-md text-mute">
-              Triple brings strategy, design and technology into one focused
+              Tripple brings strategy, design and technology into one focused
               team to create thoughtful digital products and experiences.
             </p>
             <div

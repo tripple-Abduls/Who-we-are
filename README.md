@@ -1,6 +1,6 @@
-# Triple
+# Tripple
 
-The digital home of **Triple** — an independent digital studio bringing
+The digital home of **Tripple** — an independent digital studio bringing
 strategy, design and technology into one focused team.
 
 A bespoke, motion-led single-page experience: black and warm white with gold as

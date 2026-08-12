@@ -7,7 +7,7 @@ import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE, STAGGER, REVEAL_START } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 
-/** Middle seat drops to echo the three-point Triple composition. */
+/** Middle seat drops to echo the three-point Tripple composition. */
 const OFFSET = ["", "md:mt-16", ""];
 
 export function Team() {
@@ -44,7 +44,7 @@ export function Team() {
               "Different disciplines.",
               "Shared standards.",
               <>
-                One <span className="text-gold">Triple.</span>
+                One <span className="text-gold">Tripple.</span>
               </>,
             ]}
           />

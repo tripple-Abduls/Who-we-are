@@ -1,9 +1,9 @@
 {
-  "name": "triple",
+  "name": "tripple",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Triple — an independent digital studio. Strategy, design and technology in one focused team.",
+  "description": "Tripple — an independent digital studio. Strategy, design and technology in one focused team.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -142,7 +142,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         {/* Top bar */}
         <div className="shell flex items-center justify-between py-6">
           <span className="text-[0.98rem] font-medium uppercase tracking-[0.28em] text-bone">
-            Triple<span className="text-gold">.</span>
+            Tripple<span className="text-gold">.</span>
           </span>
           <button
             ref={closeRef}

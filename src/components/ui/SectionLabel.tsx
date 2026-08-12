@@ -15,7 +15,7 @@ interface SectionLabelProps {
 
 /**
  * Editorial section marker — "02 ⋮ SELECTED WORK". The three-tick mark (middle
- * gold, taller) is Triple's recurring signature; the ticks draw in 1·2·3 as the
+ * gold, taller) is Tripple's recurring signature; the ticks draw in 1·2·3 as the
  * label enters, echoing the studio's three-part rhythm. Static under reduced
  * motion.
  */

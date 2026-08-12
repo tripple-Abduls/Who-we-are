@@ -27,7 +27,7 @@ interface ProjectCardProps {
 /**
  * Art-directed placeholder (never a skeleton). Standard cards carry an outlined
  * folio numeral placed differently per card; the feature card carries a large
- * outlined TRIPLE wordmark and a gold rule. Category and status frame it, the
+ * outlined TRIPPLE wordmark and a gold rule. Category and status frame it, the
  * title sits below. Hover scales the art, lights the border gold and reveals an
  * arrow; a VIEW cursor previews the eventual case-study interaction.
  */
@@ -56,7 +56,7 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
               aria-hidden="true"
               className="select-none font-display uppercase leading-none text-transparent [-webkit-text-stroke:1.25px_rgba(244,242,237,0.1)] text-[clamp(3rem,20cqi,15rem)] tracking-[0.02em] transition-[transform,-webkit-text-stroke-color] duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] group-hover:[-webkit-text-stroke-color:rgba(198,161,91,0.4)]"
             >
-              Triple
+              Tripple
             </span>
           </div>
           <span

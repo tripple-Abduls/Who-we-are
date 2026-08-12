@@ -83,21 +83,21 @@ export function Footer() {
               e.preventDefault();
               scrollTo(0);
             }}
-            aria-label="Triple — back to top"
+            aria-label="Tripple — back to top"
             className="block whitespace-nowrap font-display leading-[0.78] text-bone"
             style={{
               fontSize: "clamp(5rem, 25vw, 22rem)",
               letterSpacing: "-0.03em",
             }}
           >
-            Triple<span className="text-gold">.</span>
+            Tripple<span className="text-gold">.</span>
           </a>
         </Reveal>
 
         {/* Bottom bar */}
         <div className="mt-10 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[0.9rem] text-mute">
-            Built by Triple<span className="text-gold">.</span>
+            Built by Tripple<span className="text-gold">.</span>
           </p>
           <div className="flex items-center gap-7">
             <span className="num eyebrow text-faint">© 2026</span>
