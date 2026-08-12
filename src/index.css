@@ -1,1 +1,276 @@
 @import "tailwindcss";
+
+/* =========================================================================
+   TRIPLE — Design System
+   Black + warm white, with gold as a controlled signature.
+   ========================================================================= */
+
+@theme {
+  /* --- Color ------------------------------------------------------------ */
+  --color-ink: #050505; /* base black */
+  --color-ink-soft: #0b0b0b; /* near-black */
+  --color-ink-raised: #121211; /* raised surface */
+  --color-ink-line: #1c1b19; /* solid hairline on dark */
+
+  --color-bone: #f4f2ed; /* warm white */
+  --color-bone-soft: #e7e4db; /* warm white, dimmer */
+  --color-mute: #8f8b81; /* muted warm gray text */
+  --color-faint: #55524b; /* very quiet text / captions */
+
+  --color-gold: #c6a15b; /* signature accent */
+  --color-gold-soft: #d8bd86; /* lighter gold for hovers */
+  --color-gold-deep: #9c7b3f; /* pressed / borders */
+
+  /* Hairlines as tokens (alpha over context background) */
+  --color-line: color-mix(in oklab, var(--color-bone) 12%, transparent);
+  --color-line-soft: color-mix(in oklab, var(--color-bone) 7%, transparent);
+  --color-line-ink: color-mix(in oklab, var(--color-ink) 14%, transparent);
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Motion ----------------------------------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-micro: 200ms;
+  --dur-standard: 360ms;
+  --dur-reveal: 640ms;
+  --dur-cinematic: 900ms;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --shell-max: 88rem; /* ~1408px content ceiling */
+  --shell-pad: clamp(1.25rem, 5vw, 4.5rem);
+
+  /* --- Z-index ---------------------------------------------------------- */
+  --z-cursor: 90;
+  --z-header: 70;
+  --z-menu: 80;
+  --z-overlay: 60;
+}
+
+/* =========================================================================
+   Base
+   ========================================================================= */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto; /* Lenis owns smooth scrolling */
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.5;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Lenis: html gets .lenis when active */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  /* Focus: keyboard only, gold ring */
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* Minimal dark scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-line);
+    border: 3px solid var(--color-ink);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2a2825;
+  }
+
+  /* Hide native cursor only when the custom cursor is active (desktop, fine pointer) */
+  html[data-cursor="on"],
+  html[data-cursor="on"] a,
+  html[data-cursor="on"] button {
+    cursor: none;
+  }
+}
+
+/* =========================================================================
+   Layout utilities
+   ========================================================================= */
+@utility shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin-inline: auto;
+  padding-inline: var(--shell-pad);
+}
+
+/* Section vertical rhythm */
+@utility section-y {
+  padding-block: clamp(5.5rem, 13vw, 11rem);
+}
+@utility section-y-sm {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+/* =========================================================================
+   Typography utilities (fluid, centralized scale)
+   ========================================================================= */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: clamp(0.68rem, 0.75vw, 0.78rem);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+@utility num {
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Fluid display / heading ramp */
+@utility t-hero {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 8.5vw, 8.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+}
+@utility t-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5.6vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+@utility t-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 3.4rem);
+  line-height: 1.02;
+  letter-spacing: -0.018em;
+}
+@utility t-h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+@utility t-lead {
+  font-family: var(--font-sans);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  font-weight: 400;
+}
+@utility t-body {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.6;
+}
+
+/* =========================================================================
+   Reveal primitives (used with GSAP; safe fallback when JS/motion off)
+   ========================================================================= */
+@utility reveal-mask {
+  overflow: hidden;
+  display: block;
+}
+
+/* Thin animated rules */
+@utility hairline {
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-line);
+}
+
+/* Subtle film-grain overlay for cinematic depth (static, GPU-cheap) */
+@utility grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* =========================================================================
+   Reduced motion — respect the OS setting globally
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain {
+    display: none;
+  }
+}
