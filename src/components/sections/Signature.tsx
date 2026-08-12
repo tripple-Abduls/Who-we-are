@@ -126,11 +126,12 @@ export function Signature() {
                 </span>
                 <h3
                   className="mt-4 font-display text-bone"
-                  style={{ fontSize: "clamp(3rem,10vw,7rem)", lineHeight: 0.9 }}
+                  style={{ fontSize: "clamp(3rem,14vw,7rem)", lineHeight: 0.9 }}
                 >
                   {p.word}
+                  <span className="text-gold">.</span>
                 </h3>
-                <p className="t-lead mt-5 max-w-xl text-mute">{p.copy}</p>
+                <p className="t-lead mt-5 max-w-md text-mute">{p.copy}</p>
               </div>
             ))}
           </div>

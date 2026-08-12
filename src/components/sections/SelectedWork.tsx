@@ -16,7 +16,7 @@ const SHAPES: CardShape[] = [
   {
     col: "md:col-span-8",
     extra: "",
-    aspect: "aspect-[4/3] md:aspect-[16/10]",
+    aspect: "aspect-[5/4] md:aspect-[16/10]",
     surface: "bg-ink-soft",
     numPlace: "items-end justify-end",
     numSize: "text-[clamp(4rem,30cqi,14rem)]",
@@ -24,7 +24,7 @@ const SHAPES: CardShape[] = [
   {
     col: "md:col-span-4",
     extra: "md:mt-28",
-    aspect: "aspect-[4/3] md:aspect-[3/4]",
+    aspect: "aspect-[4/5] md:aspect-[3/4]",
     surface: "bg-ink-raised",
     numPlace: "items-start justify-start",
     numSize: "text-[clamp(3.5rem,42cqi,11rem)]",
@@ -32,7 +32,7 @@ const SHAPES: CardShape[] = [
   {
     col: "md:col-span-12",
     extra: "",
-    aspect: "aspect-[4/3] md:aspect-[21/9]",
+    aspect: "aspect-[1/1] md:aspect-[21/9]",
     surface: "bg-ink-soft",
     numPlace: "items-center justify-end",
     numSize: "text-[clamp(4rem,16cqi,12rem)]",
@@ -41,7 +41,7 @@ const SHAPES: CardShape[] = [
   {
     col: "md:col-span-4",
     extra: "",
-    aspect: "aspect-[4/3] md:aspect-[3/4]",
+    aspect: "aspect-[1/1] md:aspect-[3/4]",
     surface: "bg-ink-raised",
     numPlace: "items-end justify-center",
     numSize: "text-[clamp(3.5rem,44cqi,11rem)]",
@@ -49,7 +49,7 @@ const SHAPES: CardShape[] = [
   {
     col: "md:col-span-8",
     extra: "md:mt-28",
-    aspect: "aspect-[4/3] md:aspect-[16/10]",
+    aspect: "aspect-[5/4] md:aspect-[16/10]",
     surface: "bg-ink-soft",
     numPlace: "items-center justify-start",
     numSize: "text-[clamp(4rem,28cqi,13rem)]",
