@@ -5,17 +5,23 @@ import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 
-const PILLARS = [
-  { index: "01", label: "Strategy" },
-  { index: "02", label: "Design" },
-  { index: "03", label: "Technology" },
+const STAGES = [
+  { index: "01", label: "Think" },
+  { index: "02", label: "Create" },
+  { index: "03", label: "Build" },
 ];
 
-/** Line wrapped in a clipping mask for the entrance reveal. */
-function HeroLine({ children }: { children: React.ReactNode }) {
+/** A staircase line wrapped in a clipping mask for the entrance reveal. */
+function HeroLine({
+  children,
+  indent,
+}: {
+  children: React.ReactNode;
+  indent: string;
+}) {
   return (
     <span
-      className="reveal-mask"
+      className={`reveal-mask ${indent}`}
       style={{ paddingBottom: "0.16em", marginBottom: "-0.16em" }}
     >
       <span data-hero-line className="block will-change-transform">
@@ -35,52 +41,30 @@ export function Hero() {
 
       gsap.set("[data-hero-line]", { yPercent: 118 });
       gsap.set(
-        [
-          "[data-hero-top]",
-          "[data-hero-copy]",
-          "[data-hero-cta]",
-          "[data-hero-meta]",
-        ],
+        ["[data-hero-top]", "[data-hero-copy]", "[data-hero-cta]", "[data-hero-stage]", "[data-hero-cue]"],
         { autoAlpha: 0, y: 22 },
       );
 
-      const tl = gsap.timeline({
-        delay: 0.15,
-        defaults: { ease: EASE.outExpo },
-      });
+      const tl = gsap.timeline({ delay: 0.12, defaults: { ease: EASE.outExpo } });
       tl.to("[data-hero-top]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, 0)
         .to(
           "[data-hero-line]",
-          { yPercent: 0, duration: DUR.cinematic, stagger: 0.12 },
-          0.1,
+          { yPercent: 0, duration: DUR.cinematic, stagger: 0.11 },
+          0.08,
         )
+        .to("[data-hero-copy]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, "-=0.55")
+        .to("[data-hero-cta]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, "-=0.4")
         .to(
-          "[data-hero-copy]",
-          { autoAlpha: 1, y: 0, duration: DUR.reveal },
-          "-=0.55",
+          "[data-hero-stage]",
+          { autoAlpha: 1, y: 0, duration: DUR.reveal, stagger: 0.08 },
+          "-=0.5",
         )
-        .to(
-          "[data-hero-cta]",
-          { autoAlpha: 1, y: 0, duration: DUR.reveal },
-          "-=0.4",
-        )
-        .to(
-          "[data-hero-meta]",
-          { autoAlpha: 1, y: 0, duration: DUR.reveal, stagger: 0.1 },
-          "-=0.45",
-        );
+        .to("[data-hero-cue]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, "-=0.4");
 
-      // Looping scroll cue.
       gsap.fromTo(
         "[data-scroll-seg]",
         { y: 0 },
-        {
-          y: 22,
-          duration: 1.5,
-          ease: "power1.inOut",
-          repeat: -1,
-          yoyo: true,
-        },
+        { y: 22, duration: 1.5, ease: "power1.inOut", repeat: -1, yoyo: true },
       );
     },
     { scope: ref, dependencies: [reduced] },
@@ -93,73 +77,79 @@ export function Hero() {
       aria-labelledby="hero-heading"
     >
       <div className="shell flex min-h-dvh flex-col pb-10 pt-28 md:pt-32">
-        {/* Top marker row */}
+        {/* Top metadata row */}
         <div
           data-hero-top
-          className="flex items-start justify-between gap-6 border-t border-line pt-5"
+          className="flex items-center justify-between gap-6 border-t border-line pt-5"
         >
           <p className="eyebrow text-gold">Independent Digital Studio</p>
-          <p className="eyebrow num text-mute">Est. 2026</p>
+          <p className="eyebrow num text-mute">Est. 2026 — Portfolio</p>
         </div>
 
-        {/* Headline + copy + CTAs, weighted low */}
-        <div className="mt-auto pt-20">
+        {/* Oversized staircase headline */}
+        <div className="mt-auto pt-12">
           <h1
             id="hero-heading"
-            className="t-hero max-w-[15ch] text-bone md:max-w-[18ch]"
+            className="font-display text-bone"
+            style={{
+              fontSize: "clamp(2.85rem, 8.8vw, 9rem)",
+              lineHeight: 0.92,
+              letterSpacing: "-0.03em",
+            }}
           >
-            <HeroLine>We turn bold ideas</HeroLine>
-            <HeroLine>
+            <HeroLine indent="">We turn bold ideas</HeroLine>
+            <HeroLine indent="md:ml-[8%]">
               into digital <em className="italic">experiences</em>
             </HeroLine>
-            <HeroLine>
+            <HeroLine indent="md:ml-[16%]">
               built to <span className="text-gold">matter.</span>
             </HeroLine>
           </h1>
-
-          <p data-hero-copy className="t-lead mt-9 max-w-lg text-mute">
-            Triple brings strategy, design and technology into one focused team
-            to create thoughtful digital products and experiences.
-          </p>
-
-          <div
-            data-hero-cta
-            className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5"
-          >
-            <Button href="#contact">Start a Project</Button>
-            <ArrowLink href="#work">Explore Our Work</ArrowLink>
-          </div>
         </div>
 
-        {/* Bottom meta: scroll cue + the three pillars */}
-        <div className="mt-16 flex items-end justify-between gap-6">
-          <div data-hero-meta className="flex items-center gap-4">
-            <span className="relative h-10 w-px overflow-hidden bg-line">
-              <span
-                data-scroll-seg
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 block h-4 w-px bg-gold"
-              />
-            </span>
-            <span className="eyebrow text-mute">Scroll to explore</span>
+        {/* Bottom composition: copy + CTAs (left) · Triple stages (right) */}
+        <div className="mt-12 grid gap-10 border-t border-line pt-7 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-7">
+            <p data-hero-copy className="t-lead max-w-md text-mute">
+              Triple brings strategy, design and technology into one focused
+              team to create thoughtful digital products and experiences.
+            </p>
+            <div
+              data-hero-cta
+              className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5"
+            >
+              <Button href="#contact">Start a Project</Button>
+              <ArrowLink href="#work">Explore Our Work</ArrowLink>
+            </div>
           </div>
 
           <ul
-            data-hero-meta
-            className="hidden items-center gap-8 sm:flex"
-            aria-label="What we do"
+            className="flex gap-8 md:col-span-4 md:col-start-9 md:justify-end md:gap-10"
+            aria-label="How we work"
           >
-            {PILLARS.map((p) => (
-              <li key={p.index} className="flex items-baseline gap-2">
+            {STAGES.map((s) => (
+              <li key={s.index} data-hero-stage className="flex flex-col gap-2">
                 <span className="num text-[0.72rem] font-medium text-gold">
-                  {p.index}
+                  {s.index}
                 </span>
-                <span className="text-[0.82rem] tracking-[0.02em] text-bone">
-                  {p.label}
+                <span className="text-[0.82rem] uppercase tracking-[0.14em] text-bone">
+                  {s.label}
                 </span>
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* Scroll cue */}
+        <div data-hero-cue className="mt-8 flex items-center gap-4">
+          <span className="relative h-9 w-px overflow-hidden bg-line">
+            <span
+              data-scroll-seg
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 block h-4 w-px bg-gold"
+            />
+          </span>
+          <span className="eyebrow text-mute">Scroll to explore</span>
         </div>
       </div>
     </section>
