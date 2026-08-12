@@ -57,18 +57,20 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
 
       {/* Overlay meta */}
       <div className="absolute inset-0 flex flex-col justify-between p-6 md:p-7">
-        <div className="flex items-center justify-between gap-4">
-          <span className="eyebrow text-mute">{project.category}</span>
+        <div className="flex items-start justify-between gap-4">
+          <span className="eyebrow whitespace-nowrap text-mute">
+            {project.category}
+          </span>
           {linked ? (
             <ArrowUpRight
               className="size-5 -translate-x-1 text-gold opacity-0 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 group-hover:opacity-100"
               strokeWidth={1.75}
             />
           ) : (
-            <span className="flex items-center gap-2 eyebrow text-gold">
-              <span className="size-1.5 rounded-full bg-gold" />
-              In preparation
-            </span>
+            <span
+              aria-hidden="true"
+              className="mt-1 size-1.5 shrink-0 rounded-full bg-gold"
+            />
           )}
         </div>
 
@@ -82,9 +84,14 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
           <p className="mt-3 max-w-sm t-body text-mute">
             {project.description}
           </p>
-          <p className="num mt-1 text-[0.75rem] text-faint">
-            {project.year}
-          </p>
+          <div className="mt-4 flex items-center gap-3">
+            {!linked && (
+              <span className="eyebrow text-gold">In preparation</span>
+            )}
+            <span className="num text-[0.72rem] text-faint">
+              {project.year}
+            </span>
+          </div>
         </div>
       </div>
     </div>
