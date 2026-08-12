@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { cn } from "../../lib/cn";
 
 const PHASES = [
@@ -34,10 +35,13 @@ const GHOST_SIZE = "clamp(8rem, 34vw, 30rem)";
 export function Signature() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  // Pinning a full-viewport scrub is poor on touch — desktop only.
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const pinned = !reduced && isDesktop;
 
   useGSAP(
     () => {
-      if (reduced || !ref.current) return;
+      if (!pinned || !ref.current) return;
       const root = ref.current;
       const phases = gsap.utils.toArray<HTMLElement>("[data-phase]", root);
       const labels = gsap.utils.toArray<HTMLElement>("[data-sig-label]", root);
@@ -81,11 +85,11 @@ export function Signature() {
         .to(phases[2], { autoAlpha: 1, yPercent: 0, duration: 0.5 }, 2)
         .to({}, { duration: 0.5 }, 2.5);
     },
-    { scope: ref, dependencies: [reduced] },
+    { scope: ref, dependencies: [pinned] },
   );
 
-  // Reduced motion: a plain, readable three-part list.
-  if (reduced) {
+  // Mobile / reduced motion: a plain, readable three-part list — no pin.
+  if (!pinned) {
     return (
       <section id="approach" className="section-y" aria-label="How we work">
         <div className="shell">
