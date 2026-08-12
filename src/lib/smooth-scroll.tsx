@@ -43,7 +43,8 @@ export function useSmoothScroll() {
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
   const reduced = useReducedMotion();
-  const isDesktop = useMediaQuery("(min-width: 769px)");
+  // Desktop only (>=1024). Tablet and mobile use native scrolling.
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
   const enableLenis = !reduced && isDesktop;
 
   useEffect(() => {

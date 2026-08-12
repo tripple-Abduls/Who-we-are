@@ -63,7 +63,7 @@ export function Hero() {
 
       // Continuous loop is desktop-only — never runs (or lingers off-screen)
       // on mobile. gsap.matchMedia reverts it automatically below 769px.
-      gsap.matchMedia(ref).add("(min-width: 769px)", () => {
+      gsap.matchMedia(ref).add("(min-width: 1024px)", () => {
         gsap.fromTo(
           "[data-scroll-seg]",
           { y: 0 },

@@ -35,8 +35,9 @@ const GHOST_SIZE = "clamp(8rem, 34vw, 30rem)";
 export function Signature() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-  // Pinning a full-viewport scrub is poor on touch — desktop only.
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  // Pinning a full-viewport scrub is poor on touch — desktop only (>=1024).
+  // Tablet and mobile get the lightweight vertical list.
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
   const pinned = !reduced && isDesktop;
 
   useGSAP(

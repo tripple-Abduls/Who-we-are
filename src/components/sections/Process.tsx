@@ -11,8 +11,8 @@ const IDLE = "#6b6760";
 const GOLD = "#c6a15b";
 const LINE = "rgba(244,242,237,0.14)";
 
-const DESKTOP = "(min-width: 769px) and (prefers-reduced-motion: no-preference)";
-const MOBILE = "(max-width: 768px) and (prefers-reduced-motion: no-preference)";
+const DESKTOP = "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
+const MOBILE = "(max-width: 1023px) and (prefers-reduced-motion: no-preference)";
 
 /**
  * Process, split by gsap.matchMedia:
@@ -133,10 +133,10 @@ export function Process() {
           </p>
         </div>
 
-        <div className="mt-20 md:grid md:grid-cols-12 md:gap-10">
-          {/* Sticky rail */}
-          <div className="hidden md:col-span-4 md:block">
-            <div className="md:sticky md:top-[22vh]">
+        <div className="mt-20 lg:grid lg:grid-cols-12 lg:gap-10">
+          {/* Sticky rail — desktop only */}
+          <div className="hidden lg:col-span-4 lg:block">
+            <div className="lg:sticky lg:top-[22vh]">
               <div className="flex items-start gap-4">
                 <div className="relative h-[9rem] flex-1">
                   {processSteps.map((s, i) => (
@@ -181,16 +181,16 @@ export function Process() {
             </div>
           </div>
 
-          {/* Scrolling stages */}
+          {/* Stages — vertical list on mobile/tablet, scrolling column on desktop */}
           <div
             data-proc-track
-            className="md:col-span-7 md:col-start-6 lg:col-start-6"
+            className="lg:col-span-7 lg:col-start-6"
           >
             {processSteps.map((s) => (
               <article
                 key={s.index}
                 data-proc-step
-                className="flex flex-col justify-center border-t border-line py-10 md:min-h-[56vh]"
+                className="flex flex-col justify-center border-t border-line py-9 lg:min-h-[56vh] lg:py-10"
               >
                 <span className="num text-[0.85rem] font-medium tracking-[0.14em] text-gold">
                   {s.index} <span className="text-faint">/ 05</span>
