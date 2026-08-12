@@ -7,6 +7,9 @@ import { SelectedWork } from "./components/sections/SelectedWork";
 import { Services } from "./components/sections/Services";
 import { Philosophy } from "./components/sections/Philosophy";
 import { Process } from "./components/sections/Process";
+import { Team } from "./components/sections/Team";
+import { ContactCTA } from "./components/sections/ContactCTA";
+import { Footer } from "./components/layout/Footer";
 
 export default function App() {
   return (
@@ -21,7 +24,10 @@ export default function App() {
         <Services />
         <Philosophy />
         <Process />
+        <Team />
+        <ContactCTA />
       </main>
+      <Footer />
     </SmoothScrollProvider>
   );
 }
