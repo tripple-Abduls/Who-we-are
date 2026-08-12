@@ -65,9 +65,7 @@ export function About() {
           lines={[
             "Three perspectives.",
             "One standard.",
-            <>
-              Exceptional <span className="text-gold">digital work.</span>
-            </>,
+            "Exceptional digital work.",
           ]}
         />
 

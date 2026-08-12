@@ -110,7 +110,7 @@ export function Process() {
           <RevealHeading
             as="h2"
             className="t-h1 max-w-[14ch] text-bone"
-            lines={["Clear thinking.", <>Focused <span className="text-gold">execution.</span></>]}
+            lines={["Clear thinking.", "Focused execution."]}
           />
           <p className="t-body max-w-md text-mute">
             A structured process that keeps business goals, user experience and
