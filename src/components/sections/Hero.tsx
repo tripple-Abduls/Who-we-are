@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { Button } from "../ui/Button";
 import { ArrowLink } from "../ui/ArrowLink";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 const STAGES = [
   { index: "01", label: "Think" },
@@ -11,13 +12,13 @@ const STAGES = [
   { index: "03", label: "Build" },
 ];
 
-/** A staircase line wrapped in a clipping mask for the entrance reveal. */
+/** A line wrapped in a clipping mask for the entrance reveal. */
 function HeroLine({
   children,
-  indent,
+  indent = "",
 }: {
-  children: React.ReactNode;
-  indent: string;
+  children: ReactNode;
+  indent?: string;
 }) {
   return (
     <span
@@ -34,35 +35,35 @@ function HeroLine({
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  // Mobile gets its own, more vertical set of controlled line breaks.
+  const isWide = useMediaQuery("(min-width: 768px)");
 
   useGSAP(
     () => {
       if (reduced) return;
 
-      gsap.set("[data-hero-line]", { yPercent: 118 });
-      gsap.set(
-        ["[data-hero-top]", "[data-hero-copy]", "[data-hero-cta]", "[data-hero-stage]", "[data-hero-cue]"],
-        { autoAlpha: 0, y: 22 },
-      );
+      // Entrance driven by width (matches the DOM's line count). gsap.from
+      // (immediateRender) reliably applies the hidden state, then reveals.
+      if (isWide) {
+        const tl = gsap.timeline({ delay: 0.12, defaults: { ease: EASE.outExpo } });
+        tl.from("[data-hero-top]", { autoAlpha: 0, y: 22, duration: DUR.reveal }, 0)
+          .from("[data-hero-line]", { yPercent: 118, duration: DUR.cinematic, stagger: 0.11 }, 0.08)
+          .from("[data-hero-copy]", { autoAlpha: 0, y: 22, duration: DUR.reveal }, "-=0.55")
+          .from("[data-hero-cta]", { autoAlpha: 0, y: 22, duration: DUR.reveal }, "-=0.4")
+          .from("[data-hero-stage]", { autoAlpha: 0, y: 22, duration: DUR.reveal, stagger: 0.08 }, "-=0.5")
+          .from("[data-hero-cue]", { autoAlpha: 0, y: 22, duration: DUR.reveal }, "-=0.4");
+      } else {
+        // Mobile: shorter, lighter — fewer moving parts, quick settle.
+        const tl = gsap.timeline({ delay: 0.06, defaults: { ease: EASE.out } });
+        tl.from("[data-hero-top]", { autoAlpha: 0, y: 16, duration: DUR.standard }, 0)
+          .from("[data-hero-line]", { yPercent: 115, duration: DUR.reveal, stagger: 0.05 }, 0.05)
+          .from("[data-hero-copy]", { autoAlpha: 0, y: 16, duration: DUR.standard }, "-=0.35")
+          .from("[data-hero-cta]", { autoAlpha: 0, y: 16, duration: DUR.standard }, "-=0.25")
+          .from("[data-hero-stage]", { autoAlpha: 0, y: 16, duration: DUR.standard, stagger: 0.05 }, "-=0.3")
+          .from("[data-hero-cue]", { autoAlpha: 0, y: 16, duration: DUR.standard }, "-=0.25");
+      }
 
-      const tl = gsap.timeline({ delay: 0.12, defaults: { ease: EASE.outExpo } });
-      tl.to("[data-hero-top]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, 0)
-        .to(
-          "[data-hero-line]",
-          { yPercent: 0, duration: DUR.cinematic, stagger: 0.11 },
-          0.08,
-        )
-        .to("[data-hero-copy]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, "-=0.55")
-        .to("[data-hero-cta]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, "-=0.4")
-        .to(
-          "[data-hero-stage]",
-          { autoAlpha: 1, y: 0, duration: DUR.reveal, stagger: 0.08 },
-          "-=0.5",
-        )
-        .to("[data-hero-cue]", { autoAlpha: 1, y: 0, duration: DUR.reveal }, "-=0.4");
-
-      // Continuous loop is desktop-only — never runs (or lingers off-screen)
-      // on mobile. gsap.matchMedia reverts it automatically below 769px.
+      // Desktop only: the looping scroll cue.
       gsap.matchMedia(ref).add("(min-width: 1024px)", () => {
         gsap.fromTo(
           "[data-scroll-seg]",
@@ -71,8 +72,43 @@ export function Hero() {
         );
       });
     },
-    { scope: ref, dependencies: [reduced] },
+    { scope: ref, dependencies: [reduced, isWide] },
   );
+
+  const lines = isWide
+    ? [
+        { node: "We turn bold ideas", indent: "" },
+        {
+          node: (
+            <>
+              into digital <em className="italic">experiences</em>
+            </>
+          ),
+          indent: "md:ml-[8%]",
+        },
+        {
+          node: (
+            <>
+              built to <span className="text-gold">matter.</span>
+            </>
+          ),
+          indent: "md:ml-[16%]",
+        },
+      ]
+    : [
+        { node: "We turn", indent: "" },
+        { node: "bold ideas", indent: "" },
+        { node: "into digital", indent: "" },
+        { node: <em className="italic">experiences</em>, indent: "" },
+        {
+          node: (
+            <>
+              built to <span className="text-gold">matter.</span>
+            </>
+          ),
+          indent: "",
+        },
+      ];
 
   return (
     <section
@@ -80,38 +116,38 @@ export function Hero() {
       className="relative w-full overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      <div className="shell flex min-h-dvh flex-col pb-10 pt-28 md:pt-32">
+      <div className="shell flex min-h-svh flex-col pb-10 pt-28 md:min-h-dvh md:pt-32">
         {/* Top metadata row */}
         <div
           data-hero-top
           className="flex items-center justify-between gap-6 border-t border-line pt-5"
         >
           <p className="eyebrow text-gold">Independent Digital Studio</p>
-          <p className="eyebrow num text-mute">Est. 2026 — Portfolio</p>
+          <p className="eyebrow num hidden text-mute sm:block">
+            Est. 2026 — Portfolio
+          </p>
         </div>
 
-        {/* Oversized staircase headline */}
+        {/* Headline — staircase on desktop, vertical stack on mobile */}
         <div className="mt-auto pt-12">
           <h1
             id="hero-heading"
             className="font-display text-bone"
             style={{
               fontSize: "clamp(2.85rem, 8.8vw, 9rem)",
-              lineHeight: 0.92,
+              lineHeight: 0.94,
               letterSpacing: "-0.03em",
             }}
           >
-            <HeroLine indent="">We turn bold ideas</HeroLine>
-            <HeroLine indent="md:ml-[8%]">
-              into digital <em className="italic">experiences</em>
-            </HeroLine>
-            <HeroLine indent="md:ml-[16%]">
-              built to <span className="text-gold">matter.</span>
-            </HeroLine>
+            {lines.map((line, i) => (
+              <HeroLine key={i} indent={line.indent}>
+                {line.node}
+              </HeroLine>
+            ))}
           </h1>
         </div>
 
-        {/* Bottom composition: copy + CTAs (left) · Tripple stages (right) */}
+        {/* Bottom composition */}
         <div className="mt-12 grid gap-10 border-t border-line pt-7 md:grid-cols-12 md:items-end">
           <div className="md:col-span-7">
             <p data-hero-copy className="t-lead max-w-md text-mute">
@@ -120,15 +156,17 @@ export function Hero() {
             </p>
             <div
               data-hero-cta
-              className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5"
+              className="mt-8 flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8"
             >
-              <Button href="#contact">Start a Project</Button>
+              <Button href="#contact" className="w-full sm:w-auto">
+                Start a Project
+              </Button>
               <ArrowLink href="#work">Explore Our Work</ArrowLink>
             </div>
           </div>
 
           <ul
-            className="flex gap-8 md:col-span-4 md:col-start-9 md:justify-end md:gap-10"
+            className="flex gap-10 md:col-span-4 md:col-start-9 md:justify-end md:gap-10"
             aria-label="How we work"
           >
             {STAGES.map((s) => (

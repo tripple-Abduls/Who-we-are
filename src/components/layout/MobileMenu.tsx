@@ -140,7 +140,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         className="flex h-dvh w-full flex-col bg-ink"
       >
         {/* Top bar */}
-        <div className="shell flex items-center justify-between py-6">
+        <div className="shell flex items-center justify-between pb-6 pt-[max(1.5rem,env(safe-area-inset-top))]">
           <span className="text-[0.98rem] font-medium uppercase tracking-[0.28em] text-bone">
             Tripple<span className="text-gold">.</span>
           </span>
@@ -193,7 +193,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         {/* Footer */}
         <div
           data-menu-footer
-          className="shell flex flex-col gap-6 border-t border-line py-8"
+          className="shell flex flex-col gap-6 border-t border-line pt-8 pb-[max(2rem,env(safe-area-inset-bottom))]"
         >
           <p className="eyebrow text-mute">Independent digital studio</p>
           <Button
