@@ -122,21 +122,26 @@ export function Process() {
           {/* Sticky rail */}
           <div className="hidden md:col-span-4 md:block">
             <div className="md:sticky md:top-[22vh]">
-              <div className="relative h-[9rem]">
-                {processSteps.map((s, i) => (
-                  <span
-                    key={s.index}
-                    data-proc-num
-                    aria-hidden="true"
-                    className="num absolute inset-0 font-display leading-none text-gold"
-                    style={{
-                      fontSize: "clamp(4rem,9vw,8rem)",
-                      opacity: i === 0 ? 1 : 0,
-                    }}
-                  >
-                    {s.index}
-                  </span>
-                ))}
+              <div className="flex items-start gap-4">
+                <div className="relative h-[9rem] flex-1">
+                  {processSteps.map((s, i) => (
+                    <span
+                      key={s.index}
+                      data-proc-num
+                      aria-hidden="true"
+                      className="num absolute inset-0 font-display leading-none text-gold"
+                      style={{
+                        fontSize: "clamp(4rem,9vw,8rem)",
+                        opacity: i === 0 ? 1 : 0,
+                      }}
+                    >
+                      {s.index}
+                    </span>
+                  ))}
+                </div>
+                <span className="num mt-3 text-[0.95rem] tracking-[0.1em] text-mute">
+                  / 05
+                </span>
               </div>
 
               <div className="relative mt-8 h-px w-full max-w-[16rem] bg-line">
@@ -173,7 +178,7 @@ export function Process() {
                 className="flex flex-col justify-center border-t border-line py-10 md:min-h-[56vh]"
               >
                 <span className="num text-[0.85rem] font-medium tracking-[0.14em] text-gold">
-                  {s.index}
+                  {s.index} <span className="text-faint">/ 05</span>
                 </span>
                 <h3
                   data-proc-title
