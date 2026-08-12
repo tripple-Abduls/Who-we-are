@@ -6,6 +6,7 @@ import { About } from "./components/sections/About";
 import { SelectedWork } from "./components/sections/SelectedWork";
 import { Services } from "./components/sections/Services";
 import { Philosophy } from "./components/sections/Philosophy";
+import { Process } from "./components/sections/Process";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <SelectedWork />
         <Services />
         <Philosophy />
+        <Process />
       </main>
     </SmoothScrollProvider>
   );
