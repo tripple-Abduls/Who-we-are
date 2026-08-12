@@ -3,6 +3,7 @@ import { Header } from "./components/layout/Header";
 import { Hero } from "./components/sections/Hero";
 import { BrandStatement } from "./components/sections/BrandStatement";
 import { About } from "./components/sections/About";
+import { SelectedWork } from "./components/sections/SelectedWork";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Hero />
         <BrandStatement />
         <About />
+        <SelectedWork />
       </main>
     </SmoothScrollProvider>
   );
