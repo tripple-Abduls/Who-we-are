@@ -13,8 +13,18 @@ type ScrollTarget = string | number | HTMLElement;
 type ScrollToOptions = { offset?: number; immediate?: boolean };
 type ScrollTo = (target: ScrollTarget, options?: ScrollToOptions) => void;
 
-const SmoothScrollContext = createContext<{ scrollTo: ScrollTo }>({
+interface SmoothScrollApi {
+  scrollTo: ScrollTo;
+  /** Pause scrolling (e.g. while a full-screen overlay is open). */
+  stop: () => void;
+  /** Resume scrolling. */
+  start: () => void;
+}
+
+const SmoothScrollContext = createContext<SmoothScrollApi>({
   scrollTo: () => {},
+  stop: () => {},
+  start: () => {},
 });
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -78,8 +88,18 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const stop = () => {
+    if (lenisRef.current) lenisRef.current.stop();
+    else document.body.style.overflow = "hidden";
+  };
+
+  const start = () => {
+    if (lenisRef.current) lenisRef.current.start();
+    else document.body.style.overflow = "";
+  };
+
   return (
-    <SmoothScrollContext.Provider value={{ scrollTo }}>
+    <SmoothScrollContext.Provider value={{ scrollTo, stop, start }}>
       {children}
     </SmoothScrollContext.Provider>
   );
