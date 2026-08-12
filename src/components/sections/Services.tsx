@@ -7,9 +7,9 @@ import { DUR, EASE, STAGGER, REVEAL_START } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 /**
- * The one warm-white section — a deliberate pacing shift. An editorial
- * capability list (not icon cards): large names, a gold index, capability
- * tags and a gold rule that expands on hover.
+ * Editorial capability list — no cards. Large service names, a gold index and
+ * the capabilities stacked as a quiet column. On hover the index turns gold,
+ * the title nudges, the capabilities brighten and a gold rule expands.
  */
 export function Services() {
   const ref = useRef<HTMLElement>(null);
@@ -31,13 +31,11 @@ export function Services() {
   );
 
   return (
-    <section ref={ref} id="services" className="bg-bone text-ink section-y">
+    <section ref={ref} id="services" className="section-y">
       <div className="shell">
-        <div className="flex items-end justify-between gap-6 border-t border-ink/15 pt-6">
-          <SectionLabel index="03" tone="light">
-            What We Do
-          </SectionLabel>
-          <span className="eyebrow hidden text-ink/50 sm:block">
+        <div className="flex items-end justify-between gap-6 border-t border-line pt-6">
+          <SectionLabel index="03">What We Do</SectionLabel>
+          <span className="eyebrow hidden text-mute sm:block">
             Six disciplines
           </span>
         </div>
@@ -45,37 +43,43 @@ export function Services() {
         <div className="mt-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <RevealHeading
             as="h2"
-            className="t-h1 max-w-[16ch] text-ink"
+            className="t-h1 max-w-[16ch] text-bone"
             lines={["From first thought", "to final build."]}
           />
-          <p className="t-body max-w-md text-ink/60">
+          <p className="t-body max-w-md text-mute">
             We bring strategy, design and technology together so ideas don't get
             lost between disciplines.
           </p>
         </div>
 
-        <ul data-service-list className="mt-16 border-t border-ink/15">
+        <ul data-service-list className="mt-16 border-t border-line">
           {services.map((service) => (
             <li
               key={service.index}
               data-service
-              className="group relative border-b border-ink/15"
+              className="group relative border-b border-line"
             >
-              {/* Gold rule that expands on hover */}
               <span
                 aria-hidden="true"
                 className="absolute inset-x-0 bottom-[-1px] h-px origin-left scale-x-0 bg-gold transition-transform duration-[500ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
               />
-              <div className="grid gap-3 py-8 md:grid-cols-[4rem_minmax(0,1fr)_minmax(0,30rem)] md:items-baseline md:gap-10 md:py-10">
-                <span className="num text-[0.9rem] font-medium tracking-[0.1em] text-ink/40 transition-colors duration-[360ms] group-hover:text-gold">
+              <div className="grid gap-6 py-9 md:grid-cols-[4rem_minmax(0,1fr)_minmax(0,22rem)] md:items-start md:gap-10 md:py-11">
+                <span className="num text-[0.9rem] font-medium tracking-[0.1em] text-mute transition-colors duration-[360ms] group-hover:text-gold">
                   {service.index}
                 </span>
-                <h3 className="t-h2 text-ink transition-transform duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2">
+                <h3 className="t-h2 text-bone transition-transform duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2">
                   {service.title}
                 </h3>
-                <p className="t-body text-ink/55 md:text-right">
-                  {service.capabilities.join("  /  ")}
-                </p>
+                <ul className="flex flex-col gap-1.5 md:pt-2">
+                  {service.capabilities.map((cap) => (
+                    <li
+                      key={cap}
+                      className="text-[0.95rem] text-faint transition-colors duration-[360ms] group-hover:text-mute"
+                    >
+                      {cap}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </li>
           ))}
