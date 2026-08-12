@@ -170,7 +170,7 @@ export function Process() {
               <article
                 key={s.index}
                 data-proc-step
-                className="flex flex-col justify-center border-t border-line py-10 md:min-h-[64vh]"
+                className="flex flex-col justify-center border-t border-line py-10 md:min-h-[56vh]"
               >
                 <span className="num text-[0.85rem] font-medium tracking-[0.14em] text-gold">
                   {s.index}

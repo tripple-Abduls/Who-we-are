@@ -52,11 +52,8 @@ export function About() {
   return (
     <section ref={ref} id="about" className="section-y">
       <div className="shell">
-        <div className="flex items-center justify-between border-t border-line pt-6">
+        <div className="border-t border-line pt-6">
           <SectionLabel index="01">Who We Are</SectionLabel>
-          <span className="eyebrow hidden text-mute sm:block">
-            A focused team
-          </span>
         </div>
 
         <RevealHeading

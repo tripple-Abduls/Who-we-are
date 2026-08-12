@@ -50,7 +50,7 @@ export function Philosophy() {
   );
 
   return (
-    <section ref={ref} id="philosophy" className="section-y">
+    <section ref={ref} id="philosophy" className="bg-ink-soft section-y">
       <div className="shell grid gap-12 md:grid-cols-12">
         <div className="md:col-span-4 md:self-start lg:sticky lg:top-32">
           <p className="eyebrow text-gold">Principles</p>

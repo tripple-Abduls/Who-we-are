@@ -32,9 +32,8 @@ export function Team() {
   return (
     <section ref={ref} id="team" className="section-y">
       <div className="shell">
-        <div className="flex items-end justify-between gap-6 border-t border-line pt-6">
+        <div className="border-t border-line pt-6">
           <SectionLabel index="05">The Team</SectionLabel>
-          <span className="eyebrow hidden text-mute sm:block">Three · one</span>
         </div>
 
         <div className="mt-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
