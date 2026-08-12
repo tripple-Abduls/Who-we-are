@@ -11,6 +11,10 @@ export interface CardShape {
   aspect: string;
   /** Tonal surface, alternated for depth. */
   surface: string;
+  /** Flex placement of the folio numeral (art-direction per card). */
+  numPlace: string;
+  /** Fluid size of the folio numeral (container-query units). */
+  numSize: string;
 }
 
 interface ProjectCardProps {
@@ -35,25 +39,28 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
         shape.surface,
       )}
     >
-      {/* Outlined folio numeral */}
-      <div className="absolute inset-0 grid place-items-center">
-        {project.image ? (
-          <img
-            data-work-media
-            src={project.image}
-            alt=""
-            className="h-full w-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
-          />
-        ) : (
+      {/* Outlined folio numeral — placement and scale art-directed per card */}
+      {project.image ? (
+        <img
+          data-work-media
+          src={project.image}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+        />
+      ) : (
+        <div className={cn("absolute inset-0 flex p-7 md:p-9", shape.numPlace)}>
           <span
             data-work-media
             aria-hidden="true"
-            className="select-none font-display leading-none text-transparent [-webkit-text-stroke:1.25px_rgba(244,242,237,0.14)] text-[clamp(3.5rem,26cqi,12rem)] transition-[transform,-webkit-text-stroke-color] duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06] group-hover:[-webkit-text-stroke-color:rgba(198,161,91,0.55)]"
+            className={cn(
+              "select-none font-display leading-[0.8] text-transparent [-webkit-text-stroke:1.25px_rgba(244,242,237,0.13)] transition-[transform,-webkit-text-stroke-color] duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05] group-hover:[-webkit-text-stroke-color:rgba(198,161,91,0.5)]",
+              shape.numSize,
+            )}
           >
             {project.index}
           </span>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Overlay meta */}
       <div className="absolute inset-0 flex flex-col justify-between p-6 md:p-7">
