@@ -1,36 +1,19 @@
 import { useRef } from "react";
+import { useLocale } from "../../i18n/locale";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { cn } from "../../lib/cn";
 
-const PHASES = [
-  {
-    index: "01",
-    word: "Think",
-    copy: "We start with strategy — understanding the problem, the people and the goal before a single pixel exists.",
-  },
-  {
-    index: "02",
-    word: "Create",
-    copy: "We design the experience — interface, system, motion and detail, shaped with intent.",
-  },
-  {
-    index: "03",
-    word: "Build",
-    copy: "We engineer the product — fast, resilient and made for the real world.",
-  },
-];
-
 const WORD_SIZE = "clamp(3.4rem, 13.5vw, 12.5rem)";
 const GHOST_SIZE = "clamp(8rem, 34vw, 30rem)";
 
 /**
  * The Tripple signature moment. On desktop the section pins and the reader
- * scrubs through Think → Create → Build: the word and giant ghost numeral
- * crossfade, a gold line fills, and the active label lights. Under reduced
- * motion it collapses to a plain, readable three-part list — no pin, no scrub.
+ * scrubs through the three phases: the word and giant ghost numeral crossfade,
+ * a gold line fills, and the active label lights. Under reduced motion it
+ * collapses to a plain, readable three-part list — no pin, no scrub.
  */
 export function Signature() {
   const ref = useRef<HTMLElement>(null);
@@ -39,6 +22,9 @@ export function Signature() {
   // Tablet and mobile get the lightweight vertical list.
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const pinned = !reduced && isDesktop;
+  const { content } = useLocale();
+  const { signature, ui } = content;
+  const phases = signature.phases;
 
   useGSAP(
     () => {
@@ -63,12 +49,12 @@ export function Signature() {
       }
 
       const root = ref.current;
-      const phases = gsap.utils.toArray<HTMLElement>("[data-phase]", root);
+      const items = gsap.utils.toArray<HTMLElement>("[data-phase]", root);
       const labels = gsap.utils.toArray<HTMLElement>("[data-sig-label]", root);
       const counter = root.querySelector<HTMLElement>("[data-sig-counter]");
 
-      gsap.set(phases[0], { autoAlpha: 1, yPercent: 0 });
-      gsap.set([phases[1], phases[2]], { autoAlpha: 0, yPercent: 8 });
+      gsap.set(items[0], { autoAlpha: 1, yPercent: 0 });
+      gsap.set([items[1], items[2]], { autoAlpha: 0, yPercent: 8 });
 
       let current = -1;
       const setActive = (idx: number) => {
@@ -99,10 +85,10 @@ export function Signature() {
           },
         },
       });
-      tl.to(phases[0], { autoAlpha: 0, yPercent: -8, duration: 0.5 }, 1)
-        .to(phases[1], { autoAlpha: 1, yPercent: 0, duration: 0.5 }, 1)
-        .to(phases[1], { autoAlpha: 0, yPercent: -8, duration: 0.5 }, 2)
-        .to(phases[2], { autoAlpha: 1, yPercent: 0, duration: 0.5 }, 2)
+      tl.to(items[0], { autoAlpha: 0, yPercent: -8, duration: 0.5 }, 1)
+        .to(items[1], { autoAlpha: 1, yPercent: 0, duration: 0.5 }, 1)
+        .to(items[1], { autoAlpha: 0, yPercent: -8, duration: 0.5 }, 2)
+        .to(items[2], { autoAlpha: 1, yPercent: 0, duration: 0.5 }, 2)
         .to({}, { duration: 0.5 }, 2.5);
     },
     { scope: ref, dependencies: [pinned, reduced] },
@@ -111,11 +97,11 @@ export function Signature() {
   // Mobile / reduced motion: a plain, readable three-part list — no pin.
   if (!pinned) {
     return (
-      <section id="approach" className="section-y" aria-label="How we work">
+      <section id="approach" className="section-y" aria-label={ui.howWeWork}>
         <div className="shell">
-          <p className="eyebrow text-gold">Why Tripple</p>
+          <p className="eyebrow text-gold">{signature.eyebrow}</p>
           <div data-sig-list className="mt-14 flex flex-col gap-16">
-            {PHASES.map((p) => (
+            {phases.map((p) => (
               <div
                 key={p.index}
                 data-sig-item
@@ -141,12 +127,12 @@ export function Signature() {
   }
 
   return (
-    <section ref={ref} id="approach" aria-label="How we work">
+    <section ref={ref} id="approach" aria-label={ui.howWeWork}>
       <div data-sig-pin className="relative h-dvh overflow-hidden">
         <div className="shell flex h-full flex-col justify-center pt-24">
           {/* Top row */}
           <div className="flex items-center justify-between border-t border-line pt-5">
-            <p className="eyebrow text-gold">Why Tripple</p>
+            <p className="eyebrow text-gold">{signature.eyebrow}</p>
             <p data-sig-counter className="eyebrow num text-mute">
               01 / 03
             </p>
@@ -154,7 +140,7 @@ export function Signature() {
 
           {/* Crossfading phases */}
           <div className="relative flex-1">
-            {PHASES.map((p) => (
+            {phases.map((p) => (
               <div
                 key={p.index}
                 data-phase
@@ -163,7 +149,7 @@ export function Signature() {
                 <div className="relative">
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute -top-[0.35em] left-[-0.06em] select-none font-display leading-none text-transparent [-webkit-text-stroke:1.25px_rgba(198,161,91,0.16)]"
+                    className="latin-display pointer-events-none absolute -top-[0.35em] left-[-0.06em] select-none font-display leading-none text-transparent [-webkit-text-stroke:1.25px_rgba(198,161,91,0.16)] rtl:left-auto rtl:right-[-0.06em]"
                     style={{ fontSize: GHOST_SIZE }}
                   >
                     {p.index}
@@ -192,16 +178,16 @@ export function Signature() {
             <div className="relative h-px w-full bg-line">
               <span
                 data-sig-progress
-                className="absolute inset-y-0 left-0 w-full origin-left scale-x-0 bg-gold"
+                className="absolute inset-y-0 start-0 w-full origin-left scale-x-0 bg-gold rtl:origin-right"
               />
             </div>
             <div className="mt-4 flex justify-between">
-              {PHASES.map((p, i) => (
+              {phases.map((p, i) => (
                 <span
                   key={p.index}
                   data-sig-label
                   className={cn(
-                    "flex items-center gap-2 text-[0.78rem] uppercase tracking-[0.16em]",
+                    "flex items-center gap-2 text-[0.78rem] uppercase tracking-[0.16em] rtl:normal-case rtl:tracking-normal",
                   )}
                   style={{ color: i === 0 ? "#f4f2ed" : "#6b6760" }}
                 >

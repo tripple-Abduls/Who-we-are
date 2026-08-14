@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { SectionLabel } from "../ui/SectionLabel";
 import { RevealHeading } from "../ui/RevealHeading";
-import { processSteps } from "../../data/process";
+import { useLocale } from "../../i18n/locale";
 import { gsap, ScrollTrigger, useGSAP } from "../../lib/gsap";
 import { DUR, EASE } from "../../lib/motion";
 
@@ -26,6 +26,9 @@ const MOBILE = "(max-width: 1023px) and (prefers-reduced-motion: no-preference)"
  */
 export function Process() {
   const ref = useRef<HTMLElement>(null);
+  const { content } = useLocale();
+  const { process } = content;
+  const steps = process.steps;
 
   useGSAP(
     () => {
@@ -110,27 +113,26 @@ export function Process() {
 
       return () => mm.revert();
     },
-    { scope: ref, dependencies: [] },
+    { scope: ref, dependencies: [steps] },
   );
 
   return (
     <section ref={ref} id="process" className="section-y">
       <div className="shell">
         <div className="flex items-end justify-between gap-6 border-t border-line pt-6">
-          <SectionLabel index="04">Our Process</SectionLabel>
-          <span className="eyebrow hidden text-mute sm:block">Five stages</span>
+          <SectionLabel index={process.index}>{process.label}</SectionLabel>
+          <span className="eyebrow hidden text-mute sm:block">
+            {process.meta}
+          </span>
         </div>
 
         <div className="mt-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <RevealHeading
             as="h2"
             className="t-h1 max-w-[14ch] text-bone"
-            lines={["Clear thinking.", "Focused execution."]}
+            lines={process.heading}
           />
-          <p className="t-body max-w-md text-mute">
-            A structured process that keeps business goals, user experience and
-            technology moving in the same direction.
-          </p>
+          <p className="t-body max-w-md text-mute">{process.body}</p>
         </div>
 
         <div className="mt-20 lg:grid lg:grid-cols-12 lg:gap-10">
@@ -139,12 +141,12 @@ export function Process() {
             <div className="lg:sticky lg:top-[22vh]">
               <div className="flex items-start gap-4">
                 <div className="relative h-[9rem] flex-1">
-                  {processSteps.map((s, i) => (
+                  {steps.map((s, i) => (
                     <span
                       key={s.index}
                       data-proc-num
                       aria-hidden="true"
-                      className="num absolute inset-0 font-display leading-none text-gold"
+                      className="num latin-display absolute inset-0 font-display leading-none text-gold"
                       style={{
                         fontSize: "clamp(4rem,9vw,8rem)",
                         opacity: i === 0 ? 1 : 0,
@@ -162,12 +164,12 @@ export function Process() {
               <div className="relative mt-8 h-px w-full max-w-[16rem] bg-line">
                 <span
                   data-proc-fill
-                  className="absolute inset-0 origin-left scale-x-0 bg-gold"
+                  className="absolute inset-0 origin-left scale-x-0 bg-gold rtl:origin-right"
                 />
               </div>
 
               <ul className="mt-8 flex flex-col gap-4" aria-hidden="true">
-                {processSteps.map((s) => (
+                {steps.map((s) => (
                   <li
                     key={s.index}
                     data-proc-label
@@ -186,7 +188,7 @@ export function Process() {
             data-proc-track
             className="lg:col-span-7 lg:col-start-6"
           >
-            {processSteps.map((s) => (
+            {steps.map((s) => (
               <article
                 key={s.index}
                 data-proc-step

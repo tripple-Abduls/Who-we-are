@@ -1,4 +1,5 @@
 import { useRef, type ReactNode, type ElementType } from "react";
+import { Rich } from "./Rich";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE, STAGGER, REVEAL_START } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
@@ -7,8 +8,11 @@ import { cn } from "../../lib/cn";
 type HeadingTag = "h1" | "h2" | "h3" | "p" | "div";
 
 interface RevealHeadingProps {
-  /** Each entry is one visually-controlled line (art-directed line breaks). */
-  lines: ReactNode[];
+  /**
+   * Each entry is one visually-controlled line (art-directed line breaks).
+   * Strings go through `<Rich>`, so locale copy can carry inline accents.
+   */
+  lines: (string | ReactNode)[];
   as?: HeadingTag;
   className?: string;
   lineClassName?: string;
@@ -67,7 +71,7 @@ export function RevealHeading({
             data-reveal-line
             className={cn("block will-change-transform", lineClassName)}
           >
-            {line}
+            {typeof line === "string" ? <Rich text={line} /> : line}
           </span>
         </span>
       ))}

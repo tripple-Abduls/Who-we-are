@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useLocale } from "../../i18n/locale";
 import { gsap } from "../../lib/gsap";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 
@@ -15,6 +16,8 @@ const GOLD = "#c6a15b";
  */
 export function CustomCursor() {
   const reduced = useReducedMotion();
+  const { content } = useLocale();
+  const { cursorView, cursorGo } = content.ui;
   const rootRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
@@ -70,7 +73,10 @@ export function CustomCursor() {
       const target = e.target as Element | null;
       const labelled = target?.closest?.("[data-cursor]") as HTMLElement | null;
       if (labelled) {
-        setMode("label", labelled.dataset.cursor === "view" ? "View" : "Go");
+        setMode(
+          "label",
+          labelled.dataset.cursor === "view" ? cursorView : cursorGo,
+        );
         return;
       }
       if (target?.closest?.("a, button, input, textarea, select")) {
@@ -99,7 +105,7 @@ export function CustomCursor() {
       document.removeEventListener("mouseenter", onEnter);
       gsap.killTweensOf([root, ring, dot, label]);
     };
-  }, [reduced]);
+  }, [reduced, cursorView, cursorGo]);
 
   return (
     <div
@@ -119,7 +125,7 @@ export function CustomCursor() {
       />
       <div
         ref={labelRef}
-        className="absolute grid size-14 place-items-center rounded-full bg-gold text-[0.58rem] font-medium uppercase tracking-[0.12em] text-ink opacity-0"
+        className="absolute grid size-14 place-items-center rounded-full bg-gold text-[0.58rem] font-medium uppercase tracking-[0.12em] text-ink opacity-0 rtl:normal-case rtl:tracking-normal"
         style={{ margin: "-28px 0 0 -28px" }}
       />
     </div>

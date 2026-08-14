@@ -1,16 +1,15 @@
 import { useRef, type ReactNode } from "react";
 import { Button } from "../ui/Button";
 import { ArrowLink } from "../ui/ArrowLink";
+import { Rich } from "../ui/Rich";
+import { useLocale } from "../../i18n/locale";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 
-const STAGES = [
-  { index: "01", label: "Think" },
-  { index: "02", label: "Create" },
-  { index: "03", label: "Build" },
-];
+/** Staircase offsets for the wide composition; logical, so they mirror in RTL. */
+const WIDE_INDENT = ["", "md:ms-[8%]", "md:ms-[16%]"];
 
 /** A line wrapped in a clipping mask for the entrance reveal. */
 function HeroLine({
@@ -37,6 +36,8 @@ export function Hero() {
   const reduced = useReducedMotion();
   // Mobile gets its own, more vertical set of controlled line breaks.
   const isWide = useMediaQuery("(min-width: 768px)");
+  const { content } = useLocale();
+  const { hero, ui } = content;
 
   useGSAP(
     () => {
@@ -75,40 +76,7 @@ export function Hero() {
     { scope: ref, dependencies: [reduced, isWide] },
   );
 
-  const lines = isWide
-    ? [
-        { node: "We turn bold ideas", indent: "" },
-        {
-          node: (
-            <>
-              into digital <em className="italic">experiences</em>
-            </>
-          ),
-          indent: "md:ml-[8%]",
-        },
-        {
-          node: (
-            <>
-              built to <span className="text-gold">matter.</span>
-            </>
-          ),
-          indent: "md:ml-[16%]",
-        },
-      ]
-    : [
-        { node: "We turn", indent: "" },
-        { node: "bold ideas", indent: "" },
-        { node: "into digital", indent: "" },
-        { node: <em className="italic">experiences</em>, indent: "" },
-        {
-          node: (
-            <>
-              built to <span className="text-gold">matter.</span>
-            </>
-          ),
-          indent: "",
-        },
-      ];
+  const lines = isWide ? hero.lines.wide : hero.lines.narrow;
 
   return (
     <section
@@ -122,10 +90,8 @@ export function Hero() {
           data-hero-top
           className="flex items-center justify-between gap-6 border-t border-line pt-5"
         >
-          <p className="eyebrow text-gold">Independent Digital Studio</p>
-          <p className="eyebrow num hidden text-mute sm:block">
-            Est. 2026 — Portfolio
-          </p>
+          <p className="eyebrow text-gold">{hero.eyebrow}</p>
+          <p className="eyebrow num hidden text-mute sm:block">{hero.meta}</p>
         </div>
 
         {/* Headline — staircase on desktop, vertical stack on mobile */}
@@ -140,8 +106,8 @@ export function Hero() {
             }}
           >
             {lines.map((line, i) => (
-              <HeroLine key={i} indent={line.indent}>
-                {line.node}
+              <HeroLine key={i} indent={isWide ? WIDE_INDENT[i] : ""}>
+                <Rich text={line} />
               </HeroLine>
             ))}
           </h1>
@@ -151,30 +117,29 @@ export function Hero() {
         <div className="mt-12 grid gap-10 border-t border-line pt-7 md:grid-cols-12 md:items-end">
           <div className="md:col-span-7">
             <p data-hero-copy className="t-lead max-w-md text-mute">
-              Tripple brings strategy, design and technology into one focused
-              team to create thoughtful digital products and experiences.
+              {hero.copy}
             </p>
             <div
               data-hero-cta
               className="mt-8 flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8"
             >
               <Button href="#contact" className="w-full sm:w-auto">
-                Start a Project
+                {hero.primaryCta}
               </Button>
-              <ArrowLink href="#work">Explore Our Work</ArrowLink>
+              <ArrowLink href="#work">{hero.secondaryCta}</ArrowLink>
             </div>
           </div>
 
           <ul
             className="flex gap-10 md:col-span-4 md:col-start-9 md:justify-end md:gap-10"
-            aria-label="How we work"
+            aria-label={ui.howWeWork}
           >
-            {STAGES.map((s) => (
+            {hero.stages.map((s) => (
               <li key={s.index} data-hero-stage className="flex flex-col gap-2">
                 <span className="num text-[0.72rem] font-medium text-gold">
                   {s.index}
                 </span>
-                <span className="text-[0.82rem] uppercase tracking-[0.14em] text-bone">
+                <span className="text-[0.82rem] uppercase tracking-[0.14em] text-bone rtl:normal-case rtl:tracking-normal">
                   {s.label}
                 </span>
               </li>
@@ -191,7 +156,7 @@ export function Hero() {
               className="absolute inset-x-0 top-0 block h-4 w-px bg-gold"
             />
           </span>
-          <span className="eyebrow text-mute">Scroll to explore</span>
+          <span className="eyebrow text-mute">{hero.scrollCue}</span>
         </div>
       </div>
     </section>

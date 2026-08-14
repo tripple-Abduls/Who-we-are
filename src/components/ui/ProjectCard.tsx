@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
-import type { Project } from "../../data/projects";
+import { useLocale } from "../../i18n/locale";
+import type { Project } from "../../i18n/types";
 import { cn } from "../../lib/cn";
 
 export interface CardShape {
@@ -32,6 +33,9 @@ interface ProjectCardProps {
  * arrow; a VIEW cursor previews the eventual case-study interaction.
  */
 export function ProjectCard({ project, shape }: ProjectCardProps) {
+  const { content } = useLocale();
+  const { work } = content;
+
   const media = (
     <div
       className={cn(
@@ -56,7 +60,7 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
             <span
               data-work-media
               aria-hidden="true"
-              className="select-none font-display uppercase leading-none text-transparent [-webkit-text-stroke:1.25px_rgba(244,242,237,0.1)] text-[clamp(3rem,20cqi,15rem)] tracking-[0.02em] transition-[transform,-webkit-text-stroke-color] duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] group-hover:[-webkit-text-stroke-color:rgba(198,161,91,0.4)]"
+              className="latin-display select-none font-display uppercase leading-none text-transparent [-webkit-text-stroke:1.25px_rgba(244,242,237,0.1)] text-[clamp(3rem,20cqi,15rem)] tracking-[0.02em] transition-[transform,-webkit-text-stroke-color] duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] group-hover:[-webkit-text-stroke-color:rgba(198,161,91,0.4)]"
             >
               Tripple
             </span>
@@ -72,7 +76,7 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
             data-work-media
             aria-hidden="true"
             className={cn(
-              "select-none font-display leading-[0.8] text-transparent [-webkit-text-stroke:1.25px_rgba(244,242,237,0.13)] transition-[transform,-webkit-text-stroke-color] duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05] group-hover:[-webkit-text-stroke-color:rgba(198,161,91,0.5)]",
+              "latin-display select-none font-display leading-[0.8] text-transparent [-webkit-text-stroke:1.25px_rgba(244,242,237,0.13)] transition-[transform,-webkit-text-stroke-color] duration-[700ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05] group-hover:[-webkit-text-stroke-color:rgba(198,161,91,0.5)]",
               shape.numSize,
             )}
           >
@@ -85,7 +89,9 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
       <div className="absolute inset-0 flex flex-col justify-between p-6 md:p-7">
         <div className="flex items-start justify-between gap-4">
           <span className="eyebrow whitespace-nowrap text-mute">
-            {shape.feature ? `Featured — ${project.category}` : project.category}
+            {shape.feature
+              ? `${work.featured} — ${project.category}`
+              : project.category}
           </span>
           <ArrowUpRight
             className="size-5 -translate-x-1 text-gold opacity-0 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 group-hover:opacity-100"
@@ -95,16 +101,16 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
 
         <div>
           <div className="inline-block">
-            <h3 className="t-h3 text-bone transition-transform duration-[500ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1">
+            <h3 className="t-h3 text-bone transition-transform duration-[500ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1 rtl:group-hover:-translate-x-1">
               {project.title}
             </h3>
-            <span className="mt-2 block h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[500ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
+            <span className="mt-2 block h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[500ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 rtl:origin-right" />
           </div>
           <p className="mt-3 max-w-sm t-body text-mute">
             {project.description}
           </p>
           <div className="mt-4 flex items-center gap-3">
-            <span className="eyebrow text-gold">In preparation</span>
+            <span className="eyebrow text-gold">{work.status}</span>
             <span className="num text-[0.72rem] text-faint">{project.year}</span>
           </div>
         </div>
@@ -116,7 +122,7 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
     <article
       data-work-card
       data-cursor="view"
-      aria-label={`${project.title} — ${project.category} (in preparation)`}
+      aria-label={`${project.title} — ${project.category} (${work.status})`}
       className={cn("group block", shape.col, shape.extra)}
     >
       {media}

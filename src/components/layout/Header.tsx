@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Menu } from "lucide-react";
-import { navItems, CTA } from "../../data/navigation";
+import { useLocale } from "../../i18n/locale";
 import { useSmoothScroll } from "../../lib/smooth-scroll";
 import { SCROLL_OFFSET } from "../../lib/constants";
 import { gsap, useGSAP } from "../../lib/gsap";
@@ -16,6 +16,8 @@ export function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const { scrollTo } = useSmoothScroll();
   const reduced = useReducedMotion();
+  const { content } = useLocale();
+  const { items: navItems, cta } = content.nav;
 
   // Compact / background state after leaving the very top.
   useEffect(() => {
@@ -70,15 +72,15 @@ export function Header() {
               e.preventDefault();
               go("#top");
             }}
-            aria-label="Tripple — back to top"
-            className="text-[0.98rem] font-medium uppercase tracking-[0.28em] text-bone transition-colors duration-[240ms] hover:text-gold"
+            aria-label={content.ui.brandHome}
+            className="latin text-[0.98rem] font-medium uppercase tracking-[0.28em] text-bone transition-colors duration-[240ms] hover:text-gold"
           >
             Tripple<span className="text-gold">.</span>
           </a>
 
           {/* Desktop navigation */}
           <nav
-            aria-label="Primary"
+            aria-label={content.ui.primaryNav}
             className="hidden items-center gap-9 md:flex"
           >
             {navItems.map((item) => (
@@ -105,11 +107,11 @@ export function Header() {
           <div className="flex items-center gap-4">
             <div data-header-item className="hidden lg:block">
               <Button
-                href={CTA.href}
+                href={cta.href}
                 variant="outline"
                 className="px-6 py-3 text-[0.7rem]"
               >
-                {CTA.label}
+                {cta.label}
               </Button>
             </div>
 
@@ -117,12 +119,12 @@ export function Header() {
               data-header-item
               type="button"
               onClick={() => setMenuOpen(true)}
-              aria-label="Open menu"
+              aria-label={content.ui.openMenu}
               aria-expanded={menuOpen}
               className="group flex items-center gap-2.5 py-1 md:hidden"
             >
-              <span className="text-[0.72rem] font-medium uppercase tracking-[0.2em] text-bone">
-                Menu
+              <span className="text-[0.72rem] font-medium uppercase tracking-[0.2em] text-bone rtl:normal-case rtl:tracking-normal">
+                {content.ui.menu}
               </span>
               <Menu
                 className="size-5 text-bone transition-colors group-hover:text-gold"

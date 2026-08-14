@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
-import { navItems, CTA } from "../../data/navigation";
+import { useLocale } from "../../i18n/locale";
 import { useSmoothScroll } from "../../lib/smooth-scroll";
 import { SCROLL_OFFSET } from "../../lib/constants";
 import { gsap, useGSAP } from "../../lib/gsap";
@@ -24,6 +24,8 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
   const lastFocused = useRef<HTMLElement | null>(null);
   const { scrollTo, stop, start } = useSmoothScroll();
   const reduced = useReducedMotion();
+  const { content } = useLocale();
+  const { items: navItems, cta } = content.nav;
 
   // Build the open timeline once (or set the reduced-motion resting state).
   useGSAP(
@@ -130,7 +132,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
       ref={rootRef}
       role="dialog"
       aria-modal="true"
-      aria-label="Site menu"
+      aria-label={content.ui.siteMenu}
       className="invisible fixed inset-0 z-[80] md:hidden"
       // Keep out of the tab order entirely when closed.
       {...(!open ? { inert: true } : {})}
@@ -141,18 +143,18 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
       >
         {/* Top bar */}
         <div className="shell flex items-center justify-between pb-6 pt-[max(1.5rem,env(safe-area-inset-top))]">
-          <span className="text-[0.98rem] font-medium uppercase tracking-[0.28em] text-bone">
+          <span className="latin text-[0.98rem] font-medium uppercase tracking-[0.28em] text-bone">
             Tripple<span className="text-gold">.</span>
           </span>
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
-            aria-label="Close menu"
+            aria-label={content.ui.closeMenu}
             className="group flex items-center gap-2.5 py-1"
           >
-            <span className="text-[0.72rem] font-medium uppercase tracking-[0.2em] text-bone">
-              Close
+            <span className="text-[0.72rem] font-medium uppercase tracking-[0.2em] text-bone rtl:normal-case rtl:tracking-normal">
+              {content.ui.close}
             </span>
             <X
               className="size-5 text-bone transition-colors group-hover:text-gold"
@@ -163,7 +165,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
 
         {/* Navigation */}
         <nav
-          aria-label="Primary"
+          aria-label={content.ui.primaryNav}
           className="shell flex flex-1 flex-col justify-center"
         >
           <ul className="flex flex-col gap-2">
@@ -195,16 +197,16 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           data-menu-footer
           className="shell flex flex-col gap-6 border-t border-line pt-8 pb-[max(2rem,env(safe-area-inset-bottom))]"
         >
-          <p className="eyebrow text-mute">Independent digital studio</p>
+          <p className="eyebrow text-mute">{content.ui.studioTagline}</p>
           <Button
-            href={CTA.href}
+            href={cta.href}
             onClick={() => {
               onClose();
               start();
             }}
             className="w-full"
           >
-            {CTA.label}
+            {cta.label}
           </Button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { SectionLabel } from "../ui/SectionLabel";
 import { RevealHeading } from "../ui/RevealHeading";
-import { team } from "../../data/team";
+import { useLocale } from "../../i18n/locale";
 import { cn } from "../../lib/cn";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE, STAGGER, REVEAL_START } from "../../lib/motion";
@@ -13,6 +13,8 @@ const OFFSET = ["", "md:mt-16", ""];
 export function Team() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const { content } = useLocale();
+  const { team } = content;
 
   useGSAP(
     () => {
@@ -37,31 +39,23 @@ export function Team() {
     <section ref={ref} id="team" className="section-y">
       <div className="shell">
         <div className="border-t border-line pt-6">
-          <SectionLabel index="05">The Team</SectionLabel>
+          <SectionLabel index={team.index}>{team.label}</SectionLabel>
         </div>
 
         <div className="mt-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <RevealHeading
             as="h2"
             className="t-h1 max-w-[15ch] text-bone"
-            lines={[
-              "Different disciplines.",
-              "Shared standards.",
-              <>
-                One <span className="text-gold">Tripple.</span>
-              </>,
-            ]}
+            lines={team.heading}
           />
-          <p className="t-body max-w-sm text-mute">
-            A focused team bringing complementary perspectives to every project.
-          </p>
+          <p className="t-body max-w-sm text-mute">{team.body}</p>
         </div>
 
         <div
           data-team-grid
           className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-3 md:gap-6"
         >
-          {team.map((member, i) => (
+          {team.members.map((member, i) => (
             <figure
               key={member.index}
               data-member
@@ -77,7 +71,7 @@ export function Team() {
                   </span>
                 </div>
                 <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5">
-                  <span className="eyebrow text-mute">Open seat</span>
+                  <span className="eyebrow text-mute">{team.openSeat}</span>
                   <span className="num eyebrow text-gold">{member.index}</span>
                 </div>
               </div>

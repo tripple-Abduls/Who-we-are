@@ -32,6 +32,7 @@ export const ar: SiteContent = {
     footerNav: "روابط التذييل",
     howWeWork: "طريقة عملنا",
     backToTop: "الرجوع للأعلى",
+    studioTagline: "استوديو رقمي مستقل",
     cursorView: "عرض",
     cursorGo: "اذهب",
   },

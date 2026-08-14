@@ -24,6 +24,7 @@ export const en: SiteContent = {
     footerNav: "Footer",
     howWeWork: "How we work",
     backToTop: "Back to top",
+    studioTagline: "Independent digital studio",
     cursorView: "View",
     cursorGo: "Go",
   },

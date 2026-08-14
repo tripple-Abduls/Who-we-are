@@ -94,6 +94,8 @@ export interface SiteContent {
     footerNav: string;
     howWeWork: string;
     backToTop: string;
+    /** Quiet line above the CTA in the mobile menu. */
+    studioTagline: string;
     /** Custom-cursor labels. */
     cursorView: string;
     cursorGo: string;

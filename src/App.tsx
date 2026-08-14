@@ -1,3 +1,4 @@
+import { LocaleProvider, useLocale } from "./i18n/locale";
 import { SmoothScrollProvider } from "./lib/smooth-scroll";
 import { Header } from "./components/layout/Header";
 import { Hero } from "./components/sections/Hero";
@@ -14,12 +15,24 @@ import { CustomCursor } from "./components/ui/CustomCursor";
 
 export default function App() {
   return (
-    <SmoothScrollProvider>
+    <LocaleProvider>
+      <SmoothScrollProvider>
+        <Site />
+      </SmoothScrollProvider>
+    </LocaleProvider>
+  );
+}
+
+function Site() {
+  const { content } = useLocale();
+
+  return (
+    <>
       <a
         href="#top"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-[3px] focus:bg-bone focus:px-5 focus:py-3 focus:text-[0.8rem] focus:font-medium focus:uppercase focus:tracking-[0.14em] focus:text-ink"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-[3px] focus:bg-bone focus:px-5 focus:py-3 focus:text-[0.8rem] focus:font-medium focus:uppercase focus:tracking-[0.14em] focus:text-ink"
       >
-        Skip to content
+        {content.ui.skipToContent}
       </a>
       <div className="grain" aria-hidden="true" />
       <CustomCursor />
@@ -36,6 +49,6 @@ export default function App() {
         <ContactCTA />
       </main>
       <Footer />
-    </SmoothScrollProvider>
+    </>
   );
 }

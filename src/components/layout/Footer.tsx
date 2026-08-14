@@ -1,11 +1,8 @@
 import { ArrowUp } from "lucide-react";
-import { navItems } from "../../data/navigation";
+import { useLocale } from "../../i18n/locale";
 import { useSmoothScroll } from "../../lib/smooth-scroll";
 import { SCROLL_OFFSET } from "../../lib/constants";
 import { Reveal } from "../ui/Reveal";
-
-/** Channels are placeholders until real profiles exist — no invented URLs. */
-const CHANNELS = ["LinkedIn", "GitHub", "Behance", "Instagram"];
 
 function FooterLink({ href, children }: { href: string; children: string }) {
   const { scrollTo } = useSmoothScroll();
@@ -22,7 +19,7 @@ function FooterLink({ href, children }: { href: string; children: string }) {
     >
       <span className="relative">
         {children}
-        <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[320ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
+        <span className="absolute -bottom-1 start-0 h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[320ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 rtl:origin-right" />
       </span>
     </a>
   );
@@ -30,6 +27,8 @@ function FooterLink({ href, children }: { href: string; children: string }) {
 
 export function Footer() {
   const { scrollTo } = useSmoothScroll();
+  const { content } = useLocale();
+  const { footer, nav, ui } = content;
 
   return (
     <footer
@@ -40,16 +39,14 @@ export function Footer() {
         {/* Columns */}
         <div className="grid gap-x-8 gap-y-14 md:grid-cols-12">
           <div className="md:col-span-6">
-            <p className="eyebrow text-gold">Strategy / Design / Technology</p>
-            <p className="t-body mt-7 max-w-xs text-mute">
-              An independent digital studio, building its first case studies.
-            </p>
+            <p className="eyebrow text-gold">{footer.tagline}</p>
+            <p className="t-body mt-7 max-w-xs text-mute">{footer.body}</p>
           </div>
 
-          <nav className="md:col-span-3 md:col-start-7" aria-label="Footer">
-            <p className="eyebrow text-faint">Navigate</p>
+          <nav className="md:col-span-3 md:col-start-7" aria-label={ui.footerNav}>
+            <p className="eyebrow text-faint">{footer.navigateLabel}</p>
             <ul className="mt-6 flex flex-col gap-3.5">
-              {navItems.map((item) => (
+              {nav.items.map((item) => (
                 <li key={item.id}>
                   <FooterLink href={item.href}>{item.label}</FooterLink>
                 </li>
@@ -58,16 +55,16 @@ export function Footer() {
           </nav>
 
           <div className="md:col-span-3">
-            <p className="eyebrow text-faint">Studio</p>
+            <p className="eyebrow text-faint">{footer.studioLabel}</p>
             <ul className="mt-6 flex flex-col gap-3.5">
-              {CHANNELS.map((channel) => (
+              {footer.channels.map((channel) => (
                 <li
                   key={channel}
                   className="flex items-center gap-2.5 text-[0.95rem] text-faint"
                 >
-                  {channel}
-                  <span className="rounded-[2px] border border-line px-1.5 py-0.5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-mute">
-                    Soon
+                  <span className="latin">{channel}</span>
+                  <span className="rounded-[2px] border border-line px-1.5 py-0.5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-mute rtl:normal-case rtl:tracking-normal">
+                    {footer.soon}
                   </span>
                 </li>
               ))}
@@ -83,8 +80,8 @@ export function Footer() {
               e.preventDefault();
               scrollTo(0);
             }}
-            aria-label="Tripple — back to top"
-            className="block whitespace-nowrap font-display leading-[0.78] text-bone"
+            aria-label={ui.brandHome}
+            className="latin-display block whitespace-nowrap font-display leading-[0.78] text-bone"
             style={{
               fontSize: "clamp(5rem, 25vw, 22rem)",
               letterSpacing: "-0.03em",
@@ -97,7 +94,8 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-10 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[0.9rem] text-mute">
-            Built by Tripple<span className="text-gold">.</span>
+            {footer.builtBy}
+            <span className="text-gold">.</span>
           </p>
           <div className="flex items-center gap-7">
             <span className="num eyebrow text-faint">© 2026</span>
@@ -106,7 +104,7 @@ export function Footer() {
               onClick={() => scrollTo(0)}
               className="group flex items-center gap-2 eyebrow text-mute transition-colors duration-[240ms] hover:text-gold"
             >
-              Back to top
+              {ui.backToTop}
               <ArrowUp
                 className="size-3.5 transition-transform duration-[300ms] group-hover:-translate-y-0.5"
                 strokeWidth={1.75}
