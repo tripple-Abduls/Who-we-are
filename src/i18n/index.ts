@@ -31,7 +31,7 @@ export const LOCALE_QUERY_KEY = "lang";
 /** Kept in sync with the early inline resolver in `index.html`. */
 export const ARABIC_FONT_LINK_ID = "ar-fonts";
 export const ARABIC_FONT_HREF =
-  "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap";
+  "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap";
 
 export function isLocale(value: unknown): value is Locale {
   return value === "en" || value === "ar";

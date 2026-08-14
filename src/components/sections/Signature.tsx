@@ -19,7 +19,7 @@ const WORD: Record<Locale, CSSProperties> = {
     letterSpacing: "-0.03em",
   },
   ar: {
-    fontSize: "clamp(3rem, 11vw, 9.5rem)",
+    fontSize: "clamp(3.2rem, 12.5vw, 11rem)",
     lineHeight: 1.24,
     letterSpacing: "normal",
     fontWeight: 600,
@@ -30,7 +30,7 @@ const WORD: Record<Locale, CSSProperties> = {
 const WORD_COMPACT: Record<Locale, CSSProperties> = {
   en: { fontSize: "clamp(3rem,14vw,7rem)", lineHeight: 0.9 },
   ar: {
-    fontSize: "clamp(2.6rem,11.5vw,6rem)",
+    fontSize: "clamp(2.9rem,13vw,6.5rem)",
     lineHeight: 1.24,
     letterSpacing: "normal",
     fontWeight: 600,

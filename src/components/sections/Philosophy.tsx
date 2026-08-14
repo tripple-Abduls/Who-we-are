@@ -11,7 +11,7 @@ import { cn } from "../../lib/cn";
  */
 const STATEMENT: Record<Locale, string> = {
   en: "font-display text-ink text-[clamp(2.5rem,6.6vw,6.5rem)] leading-[0.94] tracking-[-0.02em]",
-  ar: "font-display text-ink text-[clamp(1.9rem,5vw,4.75rem)] font-semibold leading-[1.3] tracking-normal",
+  ar: "font-display text-ink text-[clamp(2.3rem,6.2vw,5.75rem)] font-semibold leading-[1.3] tracking-normal",
 };
 
 /**

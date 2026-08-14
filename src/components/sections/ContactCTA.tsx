@@ -12,7 +12,7 @@ import type { Locale } from "../../i18n/types";
  */
 const STATEMENT: Record<Locale, string> = {
   en: "font-display text-bone text-[clamp(3rem,10.5vw,10.5rem)] leading-[0.9] tracking-[-0.03em]",
-  ar: "font-display text-bone text-[clamp(2.4rem,8vw,8rem)] font-semibold leading-[1.26] tracking-normal",
+  ar: "font-display text-bone text-[clamp(3.4rem,10vw,9.25rem)] font-semibold leading-[1.26] tracking-normal",
 };
 
 /**
