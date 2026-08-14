@@ -1,6 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpLeft, ArrowUpRight } from "lucide-react";
 import { cn } from "../../lib/cn";
+import { useLocale } from "../../i18n/locale";
 import { useSmoothScroll } from "../../lib/smooth-scroll";
 import { SCROLL_OFFSET } from "../../lib/constants";
 
@@ -46,6 +47,11 @@ export function Button({
   ariaLabel,
 }: ButtonProps) {
   const { scrollTo } = useSmoothScroll();
+  const { isRTL } = useLocale();
+
+  // "Onward" is a reading direction, not a physical one: the diagonal points
+  // up-and-forward, which is up-left once the page reads right-to-left.
+  const Arrow = isRTL ? ArrowUpLeft : ArrowUpRight;
 
   const isExternal = !!href && /^https?:\/\//.test(href);
 
@@ -71,8 +77,8 @@ export function Button({
       <span className="relative z-10 inline-flex items-center gap-2.5">
         {children}
         {withArrow && (
-          <ArrowUpRight
-            className="size-4 transition-transform duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"
+          <Arrow
+            className="size-4 transition-transform duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[3px] group-hover:-translate-y-[3px] rtl:group-hover:-translate-x-[3px]"
             strokeWidth={1.75}
           />
         )}

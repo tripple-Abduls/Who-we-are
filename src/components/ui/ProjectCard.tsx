@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpLeft, ArrowUpRight } from "lucide-react";
 import { useLocale } from "../../i18n/locale";
 import type { Project } from "../../i18n/types";
 import { cn } from "../../lib/cn";
@@ -33,8 +33,10 @@ interface ProjectCardProps {
  * arrow; a VIEW cursor previews the eventual case-study interaction.
  */
 export function ProjectCard({ project, shape }: ProjectCardProps) {
-  const { content } = useLocale();
+  const { content, isRTL } = useLocale();
   const { work } = content;
+  // The "open this" diagonal follows reading direction, like the CTA arrows.
+  const Arrow = isRTL ? ArrowUpLeft : ArrowUpRight;
 
   const media = (
     <div
@@ -93,8 +95,8 @@ export function ProjectCard({ project, shape }: ProjectCardProps) {
               ? `${work.featured} — ${project.category}`
               : project.category}
           </span>
-          <ArrowUpRight
-            className="size-5 -translate-x-1 text-gold opacity-0 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 group-hover:opacity-100"
+          <Arrow
+            className="size-5 -translate-x-1 text-gold opacity-0 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0 group-hover:opacity-100 rtl:translate-x-1"
             strokeWidth={1.75}
           />
         </div>

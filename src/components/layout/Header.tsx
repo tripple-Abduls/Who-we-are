@@ -98,7 +98,7 @@ export function Header() {
                 {item.label}
                 <span
                   aria-hidden="true"
-                  className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[320ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+                  className="absolute -bottom-0.5 start-0 h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[320ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 rtl:origin-right"
                 />
               </a>
             ))}

@@ -184,7 +184,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                   <span className="num text-[0.8rem] font-medium tracking-[0.1em] text-gold">
                     {item.index}
                   </span>
-                  <span className="t-h1 text-bone transition-[color,transform] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2 group-hover:text-gold">
+                  <span className="t-h1 text-bone transition-[color,transform] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2 group-hover:text-gold rtl:group-hover:-translate-x-2">
                     {item.label}
                   </span>
                 </a>

@@ -1,6 +1,7 @@
 import type { MouseEvent, ReactNode } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "../../lib/cn";
+import { useLocale } from "../../i18n/locale";
 import { useSmoothScroll } from "../../lib/smooth-scroll";
 import { SCROLL_OFFSET } from "../../lib/constants";
 
@@ -24,6 +25,9 @@ export function ArrowLink({
   ariaLabel,
 }: ArrowLinkProps) {
   const { scrollTo } = useSmoothScroll();
+  const { isRTL } = useLocale();
+  // Points the way the reader is heading, so it flips with the text direction.
+  const Arrow = isRTL ? ArrowLeft : ArrowRight;
   const isExternal = !!href && /^https?:\/\//.test(href);
 
   const handleClick = (e: MouseEvent) => {
@@ -47,11 +51,11 @@ export function ArrowLink({
         {children}
         <span
           aria-hidden="true"
-          className="absolute -bottom-1.5 left-0 h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+          className="absolute -bottom-1.5 start-0 h-px w-full origin-left scale-x-0 bg-gold transition-transform duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100 rtl:origin-right"
         />
       </span>
-      <ArrowRight
-        className="size-4 transition-transform duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1"
+      <Arrow
+        className="size-4 transition-transform duration-[300ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
         strokeWidth={1.75}
       />
     </>
