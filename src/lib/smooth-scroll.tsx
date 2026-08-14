@@ -1,7 +1,9 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   type ReactNode,
 } from "react";
@@ -74,12 +76,19 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     };
   }, [enableLenis]);
 
-  const scrollTo: ScrollTo = (target, options) => {
+  const scrollTo = useCallback<ScrollTo>((target, options) => {
     const lenis = lenisRef.current;
     const offset = options?.offset ?? 0;
 
     if (lenis) {
-      lenis.scrollTo(target, { offset, duration: 1.15 });
+      // `immediate` jumps without animating — used when the language changes,
+      // where an animated slide through re-laid-out content would only jar.
+      lenis.scrollTo(
+        target,
+        options?.immediate
+          ? { offset, immediate: true }
+          : { offset, duration: 1.15 },
+      );
       return;
     }
 
@@ -92,20 +101,26 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     } else if (typeof target === "number") {
       window.scrollTo({ top: target, behavior: "auto" });
     }
-  };
+  }, []);
 
-  const stop = () => {
+  const stop = useCallback(() => {
     if (lenisRef.current) lenisRef.current.stop();
     else document.body.style.overflow = "hidden";
-  };
+  }, []);
 
-  const start = () => {
+  const start = useCallback(() => {
     if (lenisRef.current) lenisRef.current.start();
     else document.body.style.overflow = "";
-  };
+  }, []);
+
+  // Stable identity, so consumers can depend on these in effects.
+  const api = useMemo<SmoothScrollApi>(
+    () => ({ scrollTo, stop, start }),
+    [scrollTo, stop, start],
+  );
 
   return (
-    <SmoothScrollContext.Provider value={{ scrollTo, stop, start }}>
+    <SmoothScrollContext.Provider value={api}>
       {children}
     </SmoothScrollContext.Provider>
   );

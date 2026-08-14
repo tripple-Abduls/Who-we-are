@@ -7,6 +7,7 @@ import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { Button } from "../ui/Button";
+import { LanguageSwitch } from "../ui/LanguageSwitch";
 
 interface MobileMenuProps {
   open: boolean;
@@ -197,7 +198,10 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           data-menu-footer
           className="shell flex flex-col gap-6 border-t border-line pt-8 pb-[max(2rem,env(safe-area-inset-bottom))]"
         >
-          <p className="eyebrow text-mute">{content.ui.studioTagline}</p>
+          <div className="flex items-center justify-between gap-4">
+            <p className="eyebrow text-mute">{content.ui.studioTagline}</p>
+            <LanguageSwitch variant="menu" />
+          </div>
           <Button
             href={cta.href}
             onClick={() => {

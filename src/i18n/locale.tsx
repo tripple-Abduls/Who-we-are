@@ -12,8 +12,9 @@ import {
   CONTENT,
   DEFAULT_LOCALE,
   directionOf,
-  persistLocale,
   resolveLocale,
+  storeLocale,
+  syncLocaleUrl,
 } from "./index";
 import type { Direction, Locale, SiteContent } from "./types";
 
@@ -52,12 +53,15 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   // Before paint, so a switch never shows the new copy at the old direction.
   // Also covers first load if the inline resolver in index.html was stripped.
-  useLayoutEffect(() => applyDocumentLocale(locale), [locale]);
+  useLayoutEffect(() => {
+    applyDocumentLocale(locale);
+    storeLocale(locale);
+  }, [locale]);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState((current) => {
       if (current === next) return current;
-      persistLocale(next);
+      syncLocaleUrl(next);
       return next;
     });
   }, []);

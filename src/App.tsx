@@ -1,5 +1,7 @@
+import { Fragment, useEffect, useRef } from "react";
 import { LocaleProvider, useLocale } from "./i18n/locale";
-import { SmoothScrollProvider } from "./lib/smooth-scroll";
+import { SmoothScrollProvider, useSmoothScroll } from "./lib/smooth-scroll";
+import { ScrollTrigger } from "./lib/gsap";
 import { Header } from "./components/layout/Header";
 import { Hero } from "./components/sections/Hero";
 import { About } from "./components/sections/About";
@@ -16,6 +18,8 @@ import { CustomCursor } from "./components/ui/CustomCursor";
 export default function App() {
   return (
     <LocaleProvider>
+      {/* Lenis lives outside the locale key so switching never creates a
+          second instance — it is set up once, for the session. */}
       <SmoothScrollProvider>
         <Site />
       </SmoothScrollProvider>
@@ -24,7 +28,44 @@ export default function App() {
 }
 
 function Site() {
-  const { content } = useLocale();
+  const { locale, content } = useLocale();
+  const { scrollTo } = useSmoothScroll();
+  const isFirstRender = useRef(true);
+
+  // A language change remounts the tree (see the key below), so the outgoing
+  // locale's timelines and ScrollTriggers are reverted rather than stacked on
+  // top of the new ones. Jump to the top — Arabic sections have different
+  // heights, so holding the old offset would land mid-nowhere — then let the
+  // new copy lay out and re-measure exactly once.
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    scrollTo(0, { immediate: true });
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => ScrollTrigger.refresh());
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
+  }, [locale, scrollTo]);
+
+  // The Arabic face loads on demand and can land after first paint, which
+  // changes text heights. One refresh when it settles keeps trigger boundaries
+  // honest. English ships with its fonts in the document head already.
+  useEffect(() => {
+    if (locale !== "ar" || !document.fonts) return;
+    let alive = true;
+    void document.fonts.ready.then(() => {
+      if (alive) ScrollTrigger.refresh();
+    });
+    return () => {
+      alive = false;
+    };
+  }, [locale]);
 
   return (
     <>
@@ -35,20 +76,22 @@ function Site() {
         {content.ui.skipToContent}
       </a>
       <div className="grain" aria-hidden="true" />
-      <CustomCursor />
-      <Header />
-      <main id="top" className="relative">
-        <Hero />
-        <About />
-        <Signature />
-        <SelectedWork />
-        <Services />
-        <Philosophy />
-        <Process />
-        <Team />
-        <ContactCTA />
-      </main>
-      <Footer />
+      <Fragment key={locale}>
+        <CustomCursor />
+        <Header />
+        <main id="top" className="relative">
+          <Hero />
+          <About />
+          <Signature />
+          <SelectedWork />
+          <Services />
+          <Philosophy />
+          <Process />
+          <Team />
+          <ContactCTA />
+        </main>
+        <Footer />
+      </Fragment>
     </>
   );
 }

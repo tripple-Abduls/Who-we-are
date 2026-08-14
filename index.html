@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="antialiased">
+<html lang="en" dir="ltr" class="antialiased">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -13,6 +13,39 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Space+Grotesk:wght@300..700&display=swap"
       rel="stylesheet"
     />
+
+    <!--
+      Locale resolved before first paint so a stored Arabic choice never flashes
+      as LTR. Mirrors resolveLocale() in src/i18n/index.ts; English (the default)
+      touches nothing and loads no extra font. Kept inline and dependency-free
+      on purpose — it must run before the app bundle.
+    -->
+    <script>
+      (function () {
+        var locale = "en";
+        try {
+          var fromUrl = new URLSearchParams(location.search).get("lang");
+          if (fromUrl === "ar" || fromUrl === "en") {
+            locale = fromUrl;
+          } else {
+            var stored = localStorage.getItem("triple-locale");
+            if (stored === "ar" || stored === "en") locale = stored;
+          }
+        } catch (e) {
+          /* blocked storage or malformed query — keep the English default */
+        }
+        if (locale === "en") return;
+        var root = document.documentElement;
+        root.lang = "ar";
+        root.dir = "rtl";
+        var font = document.createElement("link");
+        font.id = "ar-fonts";
+        font.rel = "stylesheet";
+        font.href =
+          "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap";
+        document.head.appendChild(font);
+      })();
+    </script>
 
     <title>Tripple — Strategy, Design &amp; Technology</title>
     <meta

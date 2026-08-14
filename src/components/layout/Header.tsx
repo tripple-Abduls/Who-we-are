@@ -8,6 +8,7 @@ import { EASE, DUR } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { cn } from "../../lib/cn";
 import { Button } from "../ui/Button";
+import { LanguageSwitch } from "../ui/LanguageSwitch";
 import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
@@ -105,6 +106,12 @@ export function Header() {
 
           {/* Right cluster */}
           <div className="flex items-center gap-4">
+            {/* Below sm the switch lives in the mobile menu, so the compact
+                header stays uncrowded. */}
+            <div data-header-item className="hidden sm:block">
+              <LanguageSwitch />
+            </div>
+
             <div data-header-item className="hidden lg:block">
               <Button
                 href={cta.href}

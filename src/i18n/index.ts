@@ -96,14 +96,23 @@ export function applyDocumentLocale(locale: Locale): void {
   if (locale === "ar") ensureArabicFonts();
 }
 
-/** Persists the choice and keeps the URL shareable. */
-export function persistLocale(locale: Locale): void {
+/**
+ * Remembers the active language across visits. Called for whatever locale is
+ * actually being shown — including one that arrived via `?lang=` — so a shared
+ * Arabic link keeps the reader in Arabic on their next visit.
+ */
+export function storeLocale(locale: Locale): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
   } catch {
     /* storage blocked — the in-memory choice still applies for this visit */
   }
+}
+
+/** Keeps the address bar shareable after a switch. English drops the param. */
+export function syncLocaleUrl(locale: Locale): void {
+  if (typeof window === "undefined") return;
   try {
     const url = new URL(window.location.href);
     if (locale === DEFAULT_LOCALE) url.searchParams.delete(LOCALE_QUERY_KEY);
