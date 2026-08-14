@@ -173,7 +173,7 @@ export function Process() {
                   <li
                     key={s.index}
                     data-proc-label
-                    className="flex items-center gap-4 text-[0.95rem] tracking-[0.02em] text-mute"
+                    className="flex items-center gap-4 text-[0.95rem] tracking-[0.02em] text-mute rtl:tracking-normal"
                   >
                     <span data-proc-line className="h-px w-5 bg-line" />
                     {s.title}

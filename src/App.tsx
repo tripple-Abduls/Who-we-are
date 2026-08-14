@@ -71,7 +71,7 @@ function Site() {
     <>
       <a
         href="#top"
-        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-[3px] focus:bg-bone focus:px-5 focus:py-3 focus:text-[0.8rem] focus:font-medium focus:uppercase focus:tracking-[0.14em] focus:text-ink"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-[3px] focus:bg-bone focus:px-5 focus:py-3 focus:text-[0.8rem] focus:font-medium focus:uppercase focus:tracking-[0.14em] focus:text-ink rtl:focus:normal-case rtl:focus:tracking-normal"
       >
         {content.ui.skipToContent}
       </a>

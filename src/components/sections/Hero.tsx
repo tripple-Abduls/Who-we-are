@@ -1,28 +1,68 @@
-import { useRef, type ReactNode } from "react";
+import { useRef, type CSSProperties, type ReactNode } from "react";
 import { Button } from "../ui/Button";
 import { ArrowLink } from "../ui/ArrowLink";
 import { Rich } from "../ui/Rich";
 import { useLocale } from "../../i18n/locale";
+import type { Locale } from "../../i18n/types";
 import { gsap, useGSAP } from "../../lib/gsap";
-import { DUR, EASE } from "../../lib/motion";
+import { DUR, EASE, REVEAL_MASK } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { cn } from "../../lib/cn";
 
 /** Staircase offsets for the wide composition; logical, so they mirror in RTL. */
 const WIDE_INDENT = ["", "md:ms-[8%]", "md:ms-[16%]"];
+
+/**
+ * The headline's scale is set here rather than through a utility because it is
+ * the one piece of type that sits outside the shared ramp. Arabic runs at a
+ * smaller cap with real leading and no optical tightening; weight replaces the
+ * serif's contrast.
+ *
+ * Arabic gets its own phone scale as well. Its lines are shorter than the
+ * English ones by word count but each word is wider, so a single ramp either
+ * overruns the desktop shell or leaves a phone half empty — the two widths are
+ * art-directed separately.
+ */
+const EN_HEADLINE: CSSProperties = {
+  fontSize: "clamp(2.85rem, 8.8vw, 9rem)",
+  lineHeight: 0.94,
+  letterSpacing: "-0.03em",
+};
+
+const HEADLINE: Record<Locale, { wide: CSSProperties; narrow: CSSProperties }> =
+  {
+    en: { wide: EN_HEADLINE, narrow: EN_HEADLINE },
+    ar: {
+      wide: {
+        fontSize: "clamp(2.9rem, 7.7vw, 7.5rem)",
+        lineHeight: 1.3,
+        letterSpacing: "normal",
+        fontWeight: 600,
+      },
+      narrow: {
+        fontSize: "clamp(2.85rem, 11.6vw, 4.9rem)",
+        lineHeight: 1.26,
+        letterSpacing: "normal",
+        fontWeight: 600,
+      },
+    },
+  };
 
 /** A line wrapped in a clipping mask for the entrance reveal. */
 function HeroLine({
   children,
   indent = "",
+  pad,
 }: {
   children: ReactNode;
   indent?: string;
+  pad: string;
 }) {
   return (
     <span
       className={`reveal-mask ${indent}`}
-      style={{ paddingBottom: "0.16em", marginBottom: "-0.16em" }}
+      style={{ paddingBottom: pad, marginBottom: `-${pad}` }}
     >
       <span data-hero-line className="block will-change-transform">
         {children}
@@ -36,8 +76,9 @@ export function Hero() {
   const reduced = useReducedMotion();
   // Mobile gets its own, more vertical set of controlled line breaks.
   const isWide = useMediaQuery("(min-width: 768px)");
-  const { content } = useLocale();
+  const { locale, content, isRTL } = useLocale();
   const { hero, ui } = content;
+  const mask = REVEAL_MASK[locale];
 
   useGSAP(
     () => {
@@ -48,7 +89,7 @@ export function Hero() {
       if (isWide) {
         const tl = gsap.timeline({ delay: 0.12, defaults: { ease: EASE.outExpo } });
         tl.from("[data-hero-top]", { autoAlpha: 0, y: 22, duration: DUR.reveal }, 0)
-          .from("[data-hero-line]", { yPercent: 118, duration: DUR.cinematic, stagger: 0.11 }, 0.08)
+          .from("[data-hero-line]", { yPercent: mask.travel, duration: DUR.cinematic, stagger: 0.11 }, 0.08)
           .from("[data-hero-copy]", { autoAlpha: 0, y: 22, duration: DUR.reveal }, "-=0.55")
           .from("[data-hero-cta]", { autoAlpha: 0, y: 22, duration: DUR.reveal }, "-=0.4")
           .from("[data-hero-stage]", { autoAlpha: 0, y: 22, duration: DUR.reveal, stagger: 0.08 }, "-=0.5")
@@ -57,7 +98,7 @@ export function Hero() {
         // Mobile: shorter, lighter — fewer moving parts, quick settle.
         const tl = gsap.timeline({ delay: 0.06, defaults: { ease: EASE.out } });
         tl.from("[data-hero-top]", { autoAlpha: 0, y: 16, duration: DUR.standard }, 0)
-          .from("[data-hero-line]", { yPercent: 115, duration: DUR.reveal, stagger: 0.05 }, 0.05)
+          .from("[data-hero-line]", { yPercent: mask.travelCompact, duration: DUR.reveal, stagger: 0.05 }, 0.05)
           .from("[data-hero-copy]", { autoAlpha: 0, y: 16, duration: DUR.standard }, "-=0.35")
           .from("[data-hero-cta]", { autoAlpha: 0, y: 16, duration: DUR.standard }, "-=0.25")
           .from("[data-hero-stage]", { autoAlpha: 0, y: 16, duration: DUR.standard, stagger: 0.05 }, "-=0.3")
@@ -73,7 +114,7 @@ export function Hero() {
         );
       });
     },
-    { scope: ref, dependencies: [reduced, isWide] },
+    { scope: ref, dependencies: [reduced, isWide, mask] },
   );
 
   const lines = isWide ? hero.lines.wide : hero.lines.narrow;
@@ -91,7 +132,12 @@ export function Hero() {
           className="flex items-center justify-between gap-6 border-t border-line pt-5"
         >
           <p className="eyebrow text-gold">{hero.eyebrow}</p>
-          <p className="eyebrow num hidden text-mute sm:block">{hero.meta}</p>
+          {/* Arabic drops `num`: this line mixes Arabic words with a year, and
+              isolating the whole run as LTR would reorder the words. Plain bidi
+              already renders the year correctly inside an RTL line. */}
+          <p className={cn("eyebrow hidden text-mute sm:block", !isRTL && "num")}>
+            {hero.meta}
+          </p>
         </div>
 
         {/* Headline — staircase on desktop, vertical stack on mobile */}
@@ -99,14 +145,14 @@ export function Hero() {
           <h1
             id="hero-heading"
             className="font-display text-bone"
-            style={{
-              fontSize: "clamp(2.85rem, 8.8vw, 9rem)",
-              lineHeight: 0.94,
-              letterSpacing: "-0.03em",
-            }}
+            style={HEADLINE[locale][isWide ? "wide" : "narrow"]}
           >
             {lines.map((line, i) => (
-              <HeroLine key={i} indent={isWide ? WIDE_INDENT[i] : ""}>
+              <HeroLine
+                key={i}
+                indent={isWide ? WIDE_INDENT[i] : ""}
+                pad={mask.pad}
+              >
                 <Rich text={line} />
               </HeroLine>
             ))}

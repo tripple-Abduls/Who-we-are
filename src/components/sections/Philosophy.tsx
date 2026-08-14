@@ -1,7 +1,18 @@
 import { RevealHeading } from "../ui/RevealHeading";
 import { Reveal } from "../ui/Reveal";
 import { useLocale } from "../../i18n/locale";
+import type { Locale } from "../../i18n/types";
 import { cn } from "../../lib/cn";
+
+/**
+ * The principle statements are the largest type in the warm-white chapter.
+ * Arabic takes a smaller cap with real leading — at the Latin 0.94 the second
+ * line's dots would collide with the first line's descenders.
+ */
+const STATEMENT: Record<Locale, string> = {
+  en: "font-display text-ink text-[clamp(2.5rem,6.6vw,6.5rem)] leading-[0.94] tracking-[-0.02em]",
+  ar: "font-display text-ink text-[clamp(1.9rem,5vw,4.75rem)] font-semibold leading-[1.3] tracking-normal",
+};
 
 /**
  * The single warm-white chapter — a deliberate black → bone → black shift.
@@ -9,7 +20,7 @@ import { cn } from "../../lib/cn";
  * lines. Pure typography and whitespace; no cards.
  */
 export function Philosophy() {
-  const { content } = useLocale();
+  const { locale, content } = useLocale();
   const { philosophy } = content;
 
   return (
@@ -35,10 +46,7 @@ export function Philosophy() {
                 </span>
                 <RevealHeading
                   as="h3"
-                  className={cn(
-                    "font-display text-ink text-[clamp(2.5rem,6.6vw,6.5rem)] leading-[0.94] tracking-[-0.02em]",
-                    p.upper && "uppercase",
-                  )}
+                  className={cn(STATEMENT[locale], p.upper && "uppercase")}
                   lineClassName={cn(end && "md:text-end")}
                   lines={p.lines}
                   start="top 88%"

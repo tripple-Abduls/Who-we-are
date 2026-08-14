@@ -1,12 +1,42 @@
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { useLocale } from "../../i18n/locale";
+import type { Locale } from "../../i18n/types";
 import { gsap, useGSAP } from "../../lib/gsap";
 import { DUR, EASE } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { cn } from "../../lib/cn";
 
-const WORD_SIZE = "clamp(3.4rem, 13.5vw, 12.5rem)";
+/**
+ * The single word is the loudest type on the site. Arabic verbs (نفكّر / نصمّم /
+ * نبني) are short but tall, so they hold a comparable presence at a smaller cap
+ * once they get real leading instead of the Latin 0.86.
+ */
+const WORD: Record<Locale, CSSProperties> = {
+  en: {
+    fontSize: "clamp(3.4rem, 13.5vw, 12.5rem)",
+    lineHeight: 0.86,
+    letterSpacing: "-0.03em",
+  },
+  ar: {
+    fontSize: "clamp(3rem, 11vw, 9.5rem)",
+    lineHeight: 1.24,
+    letterSpacing: "normal",
+    fontWeight: 600,
+  },
+};
+
+/** The same word in the lightweight mobile / reduced-motion list. */
+const WORD_COMPACT: Record<Locale, CSSProperties> = {
+  en: { fontSize: "clamp(3rem,14vw,7rem)", lineHeight: 0.9 },
+  ar: {
+    fontSize: "clamp(2.6rem,11.5vw,6rem)",
+    lineHeight: 1.24,
+    letterSpacing: "normal",
+    fontWeight: 600,
+  },
+};
+
 const GHOST_SIZE = "clamp(8rem, 34vw, 30rem)";
 
 /**
@@ -22,7 +52,7 @@ export function Signature() {
   // Tablet and mobile get the lightweight vertical list.
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const pinned = !reduced && isDesktop;
-  const { content } = useLocale();
+  const { locale, content } = useLocale();
   const { signature, ui } = content;
   const phases = signature.phases;
 
@@ -112,7 +142,7 @@ export function Signature() {
                 </span>
                 <h3
                   className="mt-4 font-display text-bone"
-                  style={{ fontSize: "clamp(3rem,14vw,7rem)", lineHeight: 0.9 }}
+                  style={WORD_COMPACT[locale]}
                 >
                   {p.word}
                   <span className="text-gold">.</span>
@@ -156,11 +186,7 @@ export function Signature() {
                   </span>
                   <h3
                     className="relative font-display text-bone"
-                    style={{
-                      fontSize: WORD_SIZE,
-                      lineHeight: 0.86,
-                      letterSpacing: "-0.03em",
-                    }}
+                    style={WORD[locale]}
                   >
                     {p.word}
                     <span className="text-gold">.</span>

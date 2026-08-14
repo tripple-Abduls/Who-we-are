@@ -16,8 +16,10 @@ interface ButtonProps {
   ariaLabel?: string;
 }
 
+// `rtl:` drops the Latin micro-typography for Arabic (unicase, and tracking
+// breaks joined letterforms) and gives the label room to breathe vertically.
 const BASE =
-  "group relative inline-flex select-none items-center justify-center overflow-hidden rounded-[3px] px-7 py-4 text-[0.76rem] font-medium uppercase tracking-[0.18em] leading-none transition-colors duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)]";
+  "group relative inline-flex select-none items-center justify-center overflow-hidden rounded-[3px] px-7 py-4 text-[0.76rem] font-medium uppercase tracking-[0.18em] leading-none transition-colors duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] rtl:normal-case rtl:tracking-normal rtl:text-[0.85rem] rtl:leading-[1.4]";
 
 const VARIANTS: Record<ButtonVariant, string> = {
   solid: "bg-bone text-ink",

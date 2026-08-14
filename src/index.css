@@ -57,6 +57,22 @@
 @layer base {
   :root {
     color-scheme: dark;
+
+    /* The Latin stacks, kept addressable by name so the Arabic locale can
+       borrow them back for the wordmark and the folio numerals. Mirrors the
+       --font-display / --font-sans values in @theme above. */
+    --font-latin-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-latin-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+    /* Arabic. "Saudi" is the Ministry of Culture face and is picked up when it
+       is installed or self-hosted (see README — its licence restricts
+       redistribution, so it is not bundled). IBM Plex Sans Arabic is the
+       fallback: contemporary, geometric, built for interfaces — never a
+       calligraphic display face. */
+    --font-arabic-display: "Saudi", "Saudi Font", "IBM Plex Sans Arabic",
+      "Segoe UI", Tahoma, sans-serif;
+    --font-arabic-sans: "Saudi", "Saudi Font", "IBM Plex Sans Arabic",
+      "Segoe UI", Tahoma, sans-serif;
   }
 
   * {
@@ -152,6 +168,17 @@
   html[data-cursor="on"] a,
   html[data-cursor="on"] button {
     cursor: none;
+  }
+
+  /* Arabic headings, as a floor. Kept inside @layer base so it only outranks
+     the Latin h1–h4 rule above and still yields to any utility a component
+     sets deliberately. Arabic needs no optical tightening, wants real leading
+     for its dots and descenders, and carries weight rather than serif contrast
+     to hold presence at scale. */
+  html[lang="ar"] :is(h1, h2, h3, h4) {
+    font-weight: 600;
+    letter-spacing: normal;
+    line-height: 1.3;
   }
 }
 
@@ -264,6 +291,98 @@
   .grain {
     display: none;
   }
+}
+
+/* =========================================================================
+   Bidi islands — active in both locales
+   Latin runs inside Arabic copy (the wordmark, folio numerals, years, channel
+   names) are isolated so the bidi algorithm can never reorder them, and they
+   keep the Latin faces so the brand's numerals stay exactly as designed.
+   In English these declarations are no-ops: the direction already matches and
+   the families are the same.
+   ========================================================================= */
+.latin,
+.latin-display,
+.num {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* =========================================================================
+   ARABIC LOCALE
+   Everything below is scoped to html[lang="ar"] and left unlayered so it
+   outranks Tailwind's utilities layer. English never sees any of it.
+   ========================================================================= */
+
+html[lang="ar"] {
+  --font-display: var(--font-arabic-display);
+  --font-sans: var(--font-arabic-sans);
+}
+
+/* Metadata labels. Arabic is unicase, so uppercase is meaningless, and Latin
+   tracking visually breaks joined letterforms — both are dropped, and the size
+   is nudged up because Arabic reads smaller at the same nominal size. */
+html[lang="ar"] .eyebrow {
+  font-size: clamp(0.76rem, 0.84vw, 0.88rem);
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 1.4;
+}
+
+/* Arabic type ramp: shorter than the Latin ramp (Arabic carries more width per
+   word), with markedly more leading and no negative tracking. */
+html[lang="ar"] .t-hero {
+  font-size: clamp(2.3rem, 6.8vw, 6.9rem);
+  line-height: 1.3;
+  letter-spacing: normal;
+  font-weight: 600;
+}
+html[lang="ar"] .t-h1 {
+  font-size: clamp(1.95rem, 4.5vw, 3.9rem);
+  line-height: 1.3;
+  letter-spacing: normal;
+}
+html[lang="ar"] .t-h2 {
+  font-size: clamp(1.6rem, 3.1vw, 2.55rem);
+  line-height: 1.36;
+  letter-spacing: normal;
+}
+html[lang="ar"] .t-h3 {
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  line-height: 1.45;
+  letter-spacing: normal;
+}
+html[lang="ar"] .t-lead {
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.9;
+  letter-spacing: normal;
+}
+html[lang="ar"] .t-body {
+  font-size: clamp(0.92rem, 1.05vw, 1.02rem);
+  line-height: 1.95;
+  letter-spacing: normal;
+}
+
+/* Numerals keep Space Grotesk in Arabic: 01 / 02 / 03 are part of the brand,
+   not language. Declared after .eyebrow so `eyebrow num` resolves to Latin. */
+html[lang="ar"] .num,
+html[lang="ar"] .latin {
+  font-family: var(--font-latin-sans);
+}
+
+/* Forcing `direction: ltr` on these islands also flips what `text-align: start`
+   means for them, which would drag any full-width one (the folio numerals, the
+   step counters, the giant wordmark) to the left edge of an RTL layout. Pin
+   them back to the right — the start edge of the surrounding text. Inline
+   islands are unaffected, since text-align does nothing to them. */
+html[lang="ar"] :is(.num, .latin, .latin-display) {
+  text-align: right;
+}
+/* After .num, so the oversized outlined numerals that carry both classes keep
+   the display face. */
+html[lang="ar"] .latin-display {
+  font-family: var(--font-latin-display);
 }
 
 /* =========================================================================

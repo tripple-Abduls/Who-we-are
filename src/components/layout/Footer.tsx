@@ -63,7 +63,9 @@ export function Footer() {
                   className="flex items-center gap-2.5 text-[0.95rem] text-faint"
                 >
                   <span className="latin">{channel}</span>
-                  <span className="rounded-[2px] border border-line px-1.5 py-0.5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-mute rtl:normal-case rtl:tracking-normal">
+                  {/* Arabic needs a slightly larger, roomier badge: at 0.6rem
+                      the tanween on قريبًا crowds the border. */}
+                  <span className="rounded-[2px] border border-line px-1.5 py-0.5 text-[0.6rem] font-medium uppercase tracking-[0.14em] text-mute rtl:normal-case rtl:tracking-normal rtl:px-2 rtl:py-[0.15rem] rtl:text-[0.68rem]">
                     {footer.soon}
                   </span>
                 </li>

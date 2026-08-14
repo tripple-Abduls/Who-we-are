@@ -1,7 +1,8 @@
 import { useRef, type ReactNode, type ElementType } from "react";
 import { Rich } from "./Rich";
+import { useLocale } from "../../i18n/locale";
 import { gsap, useGSAP } from "../../lib/gsap";
-import { DUR, EASE, STAGGER, REVEAL_START } from "../../lib/motion";
+import { DUR, EASE, STAGGER, REVEAL_START, REVEAL_MASK } from "../../lib/motion";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { cn } from "../../lib/cn";
 
@@ -38,6 +39,8 @@ export function RevealHeading({
 }: RevealHeadingProps) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const { locale } = useLocale();
+  const mask = REVEAL_MASK[locale];
 
   useGSAP(
     () => {
@@ -47,7 +50,7 @@ export function RevealHeading({
       // gsap.from (immediateRender) reliably applies the hidden state at build
       // and reveals on enter under both Lenis and native (mobile) scrolling.
       gsap.from(inners, {
-        yPercent: 118,
+        yPercent: mask.travel,
         duration: DUR.reveal,
         ease: EASE.outExpo,
         stagger,
@@ -55,7 +58,7 @@ export function RevealHeading({
         scrollTrigger: { trigger: ref.current, start, once: true },
       });
     },
-    { scope: ref, dependencies: [reduced] },
+    { scope: ref, dependencies: [reduced, mask.travel] },
   );
 
   const Tag = as as ElementType;
@@ -65,7 +68,7 @@ export function RevealHeading({
         <span
           key={i}
           className="reveal-mask"
-          style={{ paddingBottom: "0.16em", marginBottom: "-0.16em" }}
+          style={{ paddingBottom: mask.pad, marginBottom: `-${mask.pad}` }}
         >
           <span
             data-reveal-line

@@ -93,7 +93,7 @@ export function Header() {
                   e.preventDefault();
                   go(item.href);
                 }}
-                className="group relative py-1 text-[0.82rem] font-medium tracking-[0.02em] text-mute transition-colors duration-[240ms] hover:text-bone"
+                className="group relative py-1 text-[0.82rem] font-medium tracking-[0.02em] text-mute transition-colors duration-[240ms] hover:text-bone rtl:tracking-normal"
               >
                 {item.label}
                 <span

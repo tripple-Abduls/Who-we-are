@@ -37,7 +37,7 @@ export function ArrowLink({
   };
 
   const classes = cn(
-    "group inline-flex items-center gap-2.5 text-[0.76rem] font-medium uppercase tracking-[0.18em] text-bone transition-colors duration-[240ms] hover:text-gold",
+    "group inline-flex items-center gap-2.5 text-[0.76rem] font-medium uppercase tracking-[0.18em] text-bone transition-colors duration-[240ms] hover:text-gold rtl:normal-case rtl:tracking-normal rtl:text-[0.85rem]",
     className,
   );
 
